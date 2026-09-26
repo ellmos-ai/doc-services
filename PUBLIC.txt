@@ -1,7 +1,7 @@
-GATE: conditional
-SCOPE: fresh-start-in-progress
+GATE: lifted
+SCOPE: released
 CREATED: 2026-09-26 Europe/Berlin
-UPDATED: 2026-09-26 Europe/Berlin (Nutzerentscheid: Neuanfang statt History-Rewrite)
+UPDATED: 2026-09-26 Europe/Berlin (merge-reviewer-Freigabe: Privacy sauber, Packaging-Fix nachgezogen)
 REPLACES: PRIVATE.txt (GATE: closed, SCOPE: private-repository, seit T-20260830-676416844)
 TICKET: T-20260926-audit-private-bach-ocean-deps (ellmos-ai/bach PR #111 Anlass)
 
@@ -17,8 +17,8 @@ Historie, aber ohne Pfadmuster. Diese Luecke fuehrte zu einem Fehlbefund, den
 merge-reviewer beim PR-Review fand.
 
 repo-publish-check, zweiter Durchlauf (2026-09-26) — mit geschaerfter Methode
-(`git log -p --all` + kombiniertes Pfad-/Secret-Muster, siehe `repo-publish-check`
-Schritt 2):
+(Muster aus Datei via `grep -f`, Positivprobe mit eingepflanztem Testpfad,
+Arbeitsbaum UND volle Historie kombiniert, siehe `repo-publish-check` Schritt 2):
 
 FUND (Historie): ein realer lokaler Dokumentenpfad in einem frueheren Commit
 (Abnahmeskript unter `docs/`), spaeter aus HEAD entfernt, aber ueber jeden
@@ -34,13 +34,21 @@ KORRIGIERT (Arbeitsbaum):
   - TODO.md: lokale Klonpfade generisch gemacht.
 
 NUTZERENTSCHEID (2026-09-26): Neuanfang statt History-Rewrite oder Hinnehmen.
-  Das bisherige private Repo wird archiviert (`ellmos-ai/doc-services-history`,
-  bleibt privat, nichts geloescht). Aus diesem bereinigten Arbeitsbaum entsteht
-  ein neues `ellmos-ai/doc-services` mit genau EINEM Commit (kein `.git`
-  uebernommen) — die alte Historie samt Fund existiert dann nur noch im
-  archivierten, privaten Repo. Bis der Review durch merge-reviewer (Opus) am
-  neuen Repo abgeschlossen ist, bleibt dieses Gate CONDITIONAL.
+  Das bisherige private Repo wurde archiviert (`ellmos-ai/doc-services-history`,
+  bleibt privat, nichts geloescht). Aus dem bereinigten Arbeitsbaum entstand
+  `ellmos-ai/doc-services` mit genau EINEM Commit (kein `.git` uebernommen) —
+  die alte Historie samt Fund existiert nur noch im archivierten, privaten Repo.
+
+MERGE-REVIEWER-FREIGABE (2026-09-26): Privacy-Check bestanden — genau 1 Commit,
+keine Funde. Zusaetzlich gefunden: `pyproject.toml` verletzte PEP 639 (SPDX
+`license = "MIT"` UND klassischer Classifier `License :: OSI Approved :: MIT
+License` gleichzeitig gesetzt) — das liess `pip install` mit
+InvalidConfigError scheitern. Classifier entfernt, `pip install` in frischem
+venv gegen den neuen Commit verifiziert (sauberer Import).
 
 Sonstiger Check-Stand unveraendert gruen: Lizenz/Drittinhalte (MIT, keine
 harten Deps, PyMuPDF/AGPL ausgeschlossen), Dokumentation/Aussendarstellung,
 Secret-/Token-Muster in Historie und Arbeitsbaum (nur synthetische Fixtures).
+
+Sichtbarkeitsumschaltung: nicht durch diesen Agenten, team-lead uebernimmt das
+nach Meldung des finalen Commits.
