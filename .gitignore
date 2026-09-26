@@ -1,0 +1,52 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tox/
+.hypothesis/
+.turbo/
+.coverage
+.coverage.*
+coverage/
+htmlcov/
+*.egg-info/
+build/
+dist/
+wheelhouse/
+.wheel-smoke/
+.venv/
+venv/
+
+# Lock protection & Cloud-Sync Multi-Host safety
+LOCK
+LOCK.*
+LOCK*.txt
+LOCK.permissions.json
+*.lock
+uv.lock
+!package-lock.json
+
+# Cloud-Sync conflict patterns
+* (kopie)*
+* (copy)*
+* (Kopie)*
+* (Copy)*
+*conflicted copy*
+*-WORKSTATION*
+*-WORKSTATION-LG*
+*-ASUS*
+*-ASUS-GEI*
+*-LAPTOP*
+*-Mac Studio*
+*.sync-temp-*
+*.sync-conflict-*
+*.conflict
+*.orig
+
+# OS artifacts
+Thumbs.db
+.DS_Store
+
+# Hostabhaengige Lage - gehoert NICHT ins Repo
+config.json

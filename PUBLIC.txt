@@ -1,0 +1,46 @@
+GATE: conditional
+SCOPE: fresh-start-in-progress
+CREATED: 2026-09-26 Europe/Berlin
+UPDATED: 2026-09-26 Europe/Berlin (Nutzerentscheid: Neuanfang statt History-Rewrite)
+REPLACES: PRIVATE.txt (GATE: closed, SCOPE: private-repository, seit T-20260830-676416844)
+TICKET: T-20260926-audit-private-bach-ocean-deps (ellmos-ai/bach PR #111 Anlass)
+
+Freigabe: Nutzer-Go 2026-09-26, relayed durch team-lead im laufenden Audit-Auftrag
+("assistant-core, accounts-core und doc-services werden veröffentlicht, sofern die
+Prüfung nichts findet").
+
+repo-publish-check, erster Durchlauf (2026-09-26) — UNVOLLSTAENDIG:
+Die Zeile "Lokale Pfade/Benutzernamen: keine Treffer" war FALSCH. Die
+Pfadmuster-Suche lief nur ueber den Arbeitsbaum, nicht ueber die volle
+Historie (`git log -p --all`); der Secret-Muster-Scan lief zwar ueber die
+Historie, aber ohne Pfadmuster. Diese Luecke fuehrte zu einem Fehlbefund, den
+merge-reviewer beim PR-Review fand.
+
+repo-publish-check, zweiter Durchlauf (2026-09-26) — mit geschaerfter Methode
+(`git log -p --all` + kombiniertes Pfad-/Secret-Muster, siehe `repo-publish-check`
+Schritt 2):
+
+FUND (Historie): ein realer lokaler Dokumentenpfad in einem frueheren Commit
+(Abnahmeskript unter `docs/`), spaeter aus HEAD entfernt, aber ueber jeden
+Klon/jede Fork weiter erreichbar, solange die Historie nicht bereinigt wird.
+Kein Zugangsdaten- oder Secret-Fund, ausschliesslich dieser eine Pfad.
+
+KORRIGIERT (Arbeitsbaum):
+  - doc_services/privacy.py: reale interne Pfadangabe durch generisches
+    Beispiel ersetzt.
+  - tests/test_privacy_und_config.py: reale Werte (Hosting-Anbieter/-Account
+    dieses Systems) durch synthetische Beispiele ersetzt.
+  - README.md / README_de.md: dieselbe reale Pfadangabe generisch gemacht.
+  - TODO.md: lokale Klonpfade generisch gemacht.
+
+NUTZERENTSCHEID (2026-09-26): Neuanfang statt History-Rewrite oder Hinnehmen.
+  Das bisherige private Repo wird archiviert (`ellmos-ai/doc-services-history`,
+  bleibt privat, nichts geloescht). Aus diesem bereinigten Arbeitsbaum entsteht
+  ein neues `ellmos-ai/doc-services` mit genau EINEM Commit (kein `.git`
+  uebernommen) — die alte Historie samt Fund existiert dann nur noch im
+  archivierten, privaten Repo. Bis der Review durch merge-reviewer (Opus) am
+  neuen Repo abgeschlossen ist, bleibt dieses Gate CONDITIONAL.
+
+Sonstiger Check-Stand unveraendert gruen: Lizenz/Drittinhalte (MIT, keine
+harten Deps, PyMuPDF/AGPL ausgeschlossen), Dokumentation/Aussendarstellung,
+Secret-/Token-Muster in Historie und Arbeitsbaum (nur synthetische Fixtures).

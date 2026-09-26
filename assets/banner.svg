@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060911"/>
+      <stop offset="50%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#08101e"/>
+    </linearGradient>
+
+    <linearGradient id="topLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="35%" stop-color="#10b981" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#f59e0b" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0.5"/>
+    </linearGradient>
+
+    <!-- Radial glows -->
+    <radialGradient id="cyanGlow" cx="25%" cy="35%" r="45%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+    </radialGradient>
+    
+    <radialGradient id="shieldGlow" cx="80%" cy="50%" r="40%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#06b6d4" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Document and Card Gradients -->
+    <linearGradient id="docGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <linearGradient id="scannerBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <!-- Filter for glow effects -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="320" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Grid Pattern -->
+  <g stroke="#334155" stroke-width="0.7" opacity="0.18">
+    <path d="M 0 40 L 1200 40 M 0 80 L 1200 80 M 0 120 L 1200 120 M 0 160 L 1200 160 M 0 200 L 1200 200 M 0 240 L 1200 240 M 0 280 L 1200 280"/>
+    <path d="M 100 0 L 100 320 M 200 0 L 200 320 M 300 0 L 300 320 M 400 0 L 400 320 M 500 0 L 500 320 M 600 0 L 600 320 M 700 0 L 700 320 M 800 0 L 800 320 M 900 0 L 900 320 M 1000 0 L 1000 320 M 1100 0 L 1100 320"/>
+  </g>
+
+  <!-- Ambient Glows -->
+  <circle cx="300" cy="140" r="300" fill="url(#cyanGlow)"/>
+  <circle cx="950" cy="160" r="280" fill="url(#shieldGlow)"/>
+
+  <!-- Top Accent Highlight Bar -->
+  <rect x="0" y="0" width="1200" height="3" fill="url(#topLine)"/>
+
+  <!-- LEFT SECTION: Branding & Information -->
+  <g transform="translate(80, 48)">
+    <!-- Category & Org Pill -->
+    <rect x="0" y="0" width="240" height="26" rx="13" fill="#0f172a" stroke="#38bdf8" stroke-width="1.2" opacity="0.95"/>
+    <circle cx="14" cy="13" r="4" fill="#38bdf8" filter="url(#softGlow)"/>
+    <text x="26" y="17" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1.5">ELLMOS-AI  •  CORE SERVICE</text>
+
+    <!-- Main Title -->
+    <text x="0" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="44" font-weight="800" fill="#ffffff" letter-spacing="-0.8">doc-services</text>
+    
+    <!-- Tagline / Mission -->
+    <text x="0" y="112" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="500" fill="#94a3b8">
+      Document Extraction  <tspan fill="#38bdf8">•</tspan>  pypdfium2 OCR  <tspan fill="#10b981">•</tspan>  Traffic-Light Privacy Shield
+    </text>
+
+    <!-- Description line -->
+    <text x="0" y="136" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#64748b">
+      Robust multi-format extraction with XML deduplication &amp; local privacy screening.
+    </text>
+
+    <!-- Feature Pills -->
+    <g transform="translate(0, 162)">
+      <!-- Pill 1: Multi-Format -->
+      <g transform="translate(0, 0)">
+        <rect width="138" height="30" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <path d="M 14 10 L 22 10 L 26 14 L 26 22 L 14 22 Z" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+        <path d="M 22 10 L 22 14 L 26 14" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="34" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size="12" font-weight="600" fill="#e2e8f0">DOCX · PDF · XLSX</text>
+      </g>
+
+      <!-- Pill 2: OCR Engine -->
+      <g transform="translate(148, 0)">
+        <rect width="142" height="30" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <rect x="14" y="10" width="12" height="12" rx="2" fill="none" stroke="#06b6d4" stroke-width="1.5"/>
+        <line x1="17" y1="16" x2="23" y2="16" stroke="#06b6d4" stroke-width="1.5"/>
+        <text x="34" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size="12" font-weight="600" fill="#e2e8f0">pypdfium2 + OCR</text>
+      </g>
+
+      <!-- Pill 3: Traffic-Light Privacy -->
+      <g transform="translate(300, 0)">
+        <rect width="168" height="30" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <circle cx="16" cy="15" r="3.5" fill="#ef4444"/>
+        <circle cx="26" cy="15" r="3.5" fill="#f59e0b"/>
+        <circle cx="36" cy="15" r="3.5" fill="#10b981"/>
+        <text x="48" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size="12" font-weight="600" fill="#e2e8f0">Traffic-Light Privacy</text>
+      </g>
+
+      <!-- Pill 4: Local-First -->
+      <g transform="translate(478, 0)">
+        <rect width="145" height="30" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <path d="M 16 16 C 16 11, 24 11, 24 16 C 26 16, 27 18, 27 20 C 27 22, 25 23, 23 23 L 15 23 C 13 23, 11 21, 11 19 C 11 17, 13 16, 16 16 Z" fill="none" stroke="#a855f7" stroke-width="1.4"/>
+        <text x="35" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size="12" font-weight="600" fill="#e2e8f0">100% Local-First</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- RIGHT SECTION: Visual Showcase (Isometric Documents + Scan Beam + Privacy Shield) -->
+  <g transform="translate(850, 40)">
+    <!-- Base Glow Behind Graphics -->
+    <ellipse cx="140" cy="130" rx="130" ry="80" fill="#0369a1" opacity="0.16" filter="url(#glow)"/>
+
+    <!-- Document 1 (Back Layer - Dark Slate) -->
+    <g transform="translate(20, 20)">
+      <rect width="180" height="210" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1.5" opacity="0.7"/>
+      <!-- Content lines -->
+      <line x1="25" y1="35" x2="110" y2="35" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+      <line x1="25" y1="55" x2="155" y2="55" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="25" y1="70" x2="140" y2="70" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="25" y1="85" x2="150" y2="85" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="25" y1="100" x2="120" y2="100" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Document 2 (Middle OCR Layer - Elevated) -->
+    <g transform="translate(50, 40)">
+      <rect width="185" height="210" rx="10" fill="url(#docGrad)" stroke="#0ea5e9" stroke-width="1.8" filter="url(#softGlow)"/>
+      
+      <!-- Top header line -->
+      <line x1="25" y1="30" x2="90" y2="30" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="155" cy="30" r="4" fill="#38bdf8"/>
+
+      <!-- OCR Bounding Boxes / Scanned Text Blocks -->
+      <rect x="25" y="50" width="85" height="18" rx="3" fill="#0284c7" fill-opacity="0.15" stroke="#38bdf8" stroke-dasharray="2 2" stroke-width="1"/>
+      <line x1="30" y1="59" x2="95" y2="59" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
+
+      <rect x="118" y="50" width="42" height="18" rx="3" fill="#0284c7" fill-opacity="0.15" stroke="#38bdf8" stroke-dasharray="2 2" stroke-width="1"/>
+      <line x1="123" y1="59" x2="150" y2="59" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Table deduplication representation -->
+      <rect x="25" y="80" width="135" height="42" rx="4" fill="#0b1329" stroke="#38bdf8" stroke-width="1.2"/>
+      <line x1="25" y1="101" x2="160" y2="101" stroke="#38bdf8" stroke-width="0.8" opacity="0.6"/>
+      <line x1="70" y1="80" x2="70" y2="122" stroke="#38bdf8" stroke-width="0.8" opacity="0.6"/>
+      <line x1="115" y1="80" x2="115" y2="122" stroke="#38bdf8" stroke-width="0.8" opacity="0.6"/>
+      <!-- XML tc checkmark badge in table -->
+      <text x="32" y="95" font-family="monospace" font-size="9" fill="#38bdf8">&lt;tc&gt;</text>
+      <text x="76" y="95" font-family="monospace" font-size="9" fill="#10b981">dedup</text>
+      <text x="122" y="95" font-family="monospace" font-size="9" fill="#38bdf8">17.8x</text>
+
+      <!-- Lines below -->
+      <line x1="25" y1="138" x2="145" y2="138" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="25" y1="152" x2="125" y2="152" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Dynamic Laser OCR Scanline -->
+      <rect x="15" y="105" width="155" height="28" fill="url(#scannerBeam)" opacity="0.75"/>
+      <line x1="15" y1="133" x2="170" y2="133" stroke="#38bdf8" stroke-width="2.5" filter="url(#softGlow)"/>
+    </g>
+
+    <!-- Privacy Shield Overlay (Foreground Element) -->
+    <g transform="translate(150, 120)">
+      <!-- Shield Drop Shadow / Aura -->
+      <circle cx="45" cy="45" r="46" fill="#047857" opacity="0.25" filter="url(#glow)"/>
+      
+      <!-- Hexagonal Shield Badge -->
+      <polygon points="45,8 82,22 82,60 45,86 8,60 8,22" fill="#0f172a" stroke="#10b981" stroke-width="2.5" filter="url(#softGlow)"/>
+      
+      <!-- Inner Shield Accent -->
+      <polygon points="45,15 75,26 75,56 45,78 15,56 15,26" fill="url(#shieldGrad)" opacity="0.2"/>
+
+      <!-- Lock / Privacy Check Emblem inside Shield -->
+      <path d="M 37 36 L 45 44 L 56 31" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)"/>
+
+      <!-- Floating Traffic Light Satellite Badges -->
+      <!-- Red (Masked / Blocked PII) -->
+      <g transform="translate(-14, 10)">
+        <circle cx="10" cy="10" r="10" fill="#0f172a" stroke="#ef4444" stroke-width="1.8"/>
+        <circle cx="10" cy="10" r="4.5" fill="#ef4444" filter="url(#softGlow)"/>
+      </g>
+      <!-- Amber (Review / Gate) -->
+      <g transform="translate(74, 10)">
+        <circle cx="10" cy="10" r="10" fill="#0f172a" stroke="#f59e0b" stroke-width="1.8"/>
+        <circle cx="10" cy="10" r="4.5" fill="#f59e0b" filter="url(#softGlow)"/>
+      </g>
+      <!-- Green (Safe / Sanitized) -->
+      <g transform="translate(35, 82)">
+        <circle cx="10" cy="10" r="10" fill="#0f172a" stroke="#10b981" stroke-width="1.8"/>
+        <circle cx="10" cy="10" r="4.5" fill="#10b981" filter="url(#softGlow)"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom Accent Line -->
+  <rect x="0" y="318" width="1200" height="2" fill="#1e293b"/>
+</svg>

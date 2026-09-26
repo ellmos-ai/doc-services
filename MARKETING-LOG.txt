@@ -1,0 +1,78 @@
+# MARKETING-LOG — doc-services (Document Extraction, OCR & Privacy Gate)
+# Stand: 2026-09-14 | Repository: ellmos-ai/doc-services | Lizenz: MIT | Version: 0.1.1
+
+## 1. Positionierung & Kernnutzen (Value Proposition)
+
+`doc-services` ist die modulare, unabhängige Dokumentenextraktions-, OCR- und Datenschutz-Schicht für lokale LLM-Pipelines, Wissensdatenbanken und autonome Agenten.
+
+Anwendungsfall & Kernproblem:
+Agenten und LLMs müssen Dokumente (PDF, DOCX, XLSX, PPTX, Bilder) lesen können. Standardwerkzeuge bringen gravierende Hürden mit sich:
+- Geerbte Copyleft-Lizenzen (wie PyMuPDF / AGPL), die downstream proprietäre und MIT-kompatible Auslieferungen blockieren.
+- Naives Parsen verbundener Tabellenzellen in Word (DOCX), das zu massiven Token-Vervielfachungen führt (gemessen: Faktor 17,8x).
+- Fehlende Inhaltsprüfung vor der Weitergabe an LLMs (Zugangsdaten, IBAN, Gesundheitsdaten in harmlos benannten Dateien).
+- Harte statische Abhängigkeiten statt dynamischer Backend-Erkennung mit ehrlichem Fallback.
+
+`doc-services` löst all diese Probleme modular:
+1. **Lernende Präferenzkette**: Formatkatalog (`profil.json`) trifft lokale Host-Installation (`config.json`), ermittelt zur Laufzeit verfügbare Werkzeuge und führt eine transparente Fallback-Kette.
+2. **AGPL-Freiheit**: PDF-Rendering läuft garantiert über `pypdfium2` (BSD-3-Clause / Apache-2.0). PyMuPDF (`fitz`) ist nirgends enthalten (Vertragstest `tests/test_no_agpl.py`).
+3. **DOCX-Zellendeduplizierung**: Dedupliziert verbundene Tabellenzellen auf XML-Element-Ebene (`tc`-Identität), verhindert 17,8-fache Tokenverschwendung.
+4. **Inhaltsbasierte Ampel-Datenschutzprüfung**: Fail-Closed-Prüfung (`darf_weitergegeben_werden()`) auf IBAN, Steuer-ID, Sozialversicherung, Patientendaten, API-Keys und SSH-Zertifikate.
+5. **Zero-Egress & Local-First**: 100% offline, null Telemetrie, keine externen API-Aufrufe, `RunAsInvoker`.
+
+---
+
+## 2. Ziel-Personas (Target Audience)
+
+1. **[PERSONA-01] Local LLM & Ingestion Pipeline Developers**
+   - Entwickler, die Dokumente in lokale RAG-Systeme, Embeddings oder LLM-Kontexte einlesen.
+   - Benötigen sauberes Markdown oder Plain-Text ohne Token-Explosion und ohne Abstürze bei fehlenden Bibliotheken.
+
+2. **[PERSONA-02] Privacy & Compliance Officers**
+   - Sicherheits- und Compliance-Verantwortliche, die verhindern müssen, dass PII (Personally Identifiable Information) oder API-Schlüssel an Dritte abfließen.
+   - Profitieren von inhaltsbasierter Ampel-Klassifikation mit automatischer Maskierung im Prüfbericht.
+
+3. **[PERSONA-03] Document Processing & Office Automation Engineers**
+   - Software-Ingenieure, die Office- und PDF-Dateien automatisiert verarbeiten und auf verlässliche, permissiv lizenzierte Bibliotheken angewiesen sind.
+
+4. **[PERSONA-04] Modular Multi-Agent Swarm Architects**
+   - Architekten von Multi-Agenten-Systemen (wie ellmos, Claude Code, Codex, Antigravity), die Werkzeugdienste benötigen, die ihren Zustand ehrlich melden.
+
+---
+
+## 3. Vergleichsmatrix gegenüber 4 Alternativen
+
+| Dimension | doc-services | PyMuPDF-Tools | Naives python-docx | Cloud Document APIs |
+|---|---|---|---|---|
+| **Lizenzintegrität** | MIT (100% permissiv, pypdfium2) | AGPL-3.0 (Copyleft) | MIT | Proprietär / Vendor Lock-in |
+| **Zellendeduplizierung** | Ja (XML tc-Identität, 17.8x Ersparnis) | Nein | Nein (Spaltenvervielfachung) | Variabel / Blackbox |
+| **Inhaltsbasierter Datenschutz** | Ja (Ampel ROT/GELB/GRÜN, fail-closed) | Nein | Nein | Nein (Daten gehen an Cloud) |
+| **Backend-Präferenzkette** | Ja (mit Fallbacks & Statistik) | Nein (Single-Backend) | Nein (Single-Backend) | Nein |
+| **Offline / Zero Egress** | Ja (100% offline) | Ja | Ja | Nein (Netzwerk-Zwang) |
+| **Token-Effizienz** | Optimal (keine Dubletten, sauberes md/txt) | Mittel | Schlecht bei Tabellen | Variabel |
+| **Transparente Fehlermeldung** | Ja (benennt fehlendes Paket/Programm) | Nein | Standard Python Exception | HTTP Statuscodes |
+| **Unprivilegierte Ausführung** | Ja (`RunAsInvoker`) | Ja | Ja | N/A (Server-seitig) |
+| **Output-Form-Filterung** | Ja (`produces="text"` / `"markdown"`) | Nein | Nur Text | Festes JSON |
+| **Multi-Host & Sync-Schutz** | Ja (gehärtete Ignorierregeln) | Nein | Nein | Nein |
+
+---
+
+## 4. Discoverability & SEO-Keywords
+
+`doc-services`, `document-extraction`, `markdown`, `ocr`, `tesseract`, `pypdfium2`, `agpl-free`,
+`python-docx`, `merged-cell-deduplication`, `privacy-classifier`, `fail-closed`, `local-first`,
+`zero-egress`, `llm-ingestion`, `rag-preprocessing`, `mit-license`, `ellmos-ai`
+
+---
+
+## 5. Audit & Governance-Invarianten (Stand 2026-09-14)
+
+- **INV-LOCAL-01**: Keine externen Netzanfragen (Zero Egress).
+- **INV-LOCAL-02**: Unprivilegierte Ausführung (`RunAsInvoker`).
+- **INV-LOCAL-03**: Keine AGPL-Komponenten (PyMuPDF strikt ausgeschlossen).
+- **INV-LOCAL-04**: Fail-Closed Datenschutzfilter für Dokumenteninhalte.
+- **INV-LOCAL-05**: Verbundene Tabellenzellen in DOCX werden dedupliziert.
+- **INV-LOCAL-06**: CI-Workflows mit Timeout-Minutes und Concurrency-Cancelling.
+- **INV-LOCAL-07**: Multi-Host Sync-Schutz in `.gitignore`.
+- **INV-LOCAL-08**: PEP 621 Standardisierung in `pyproject.toml`.
+- **INV-LOCAL-09**: Version 0.1.1 über alle Manifeste harmonisiert.
+- **INV-LOCAL-10**: 48h SLA für Sicherheits- und Integritätsmeldungen.

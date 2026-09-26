@@ -1,0 +1,240 @@
+{
+  "schema": 1,
+  "beschreibung": "Katalog der bekannten Extraktions-Backends je Format. Beschreibt, was es THEORETISCH gibt - unabhaengig davon, was auf diesem Host installiert ist. Die eigene Lage und Praeferenz steht in config.json (siehe doc_services/config.py).",
+  "gepflegt_am": "2026-08-18",
+  "lizenz_hinweis": "Es werden ausschliesslich permissiv lizenzierte Backends gefuehrt. PyMuPDF (AGPL) ist bewusst NICHT enthalten - Entscheidung E08 vom 2026-08-18: geerbte Copyleft bindet und blockiert die Auslieferung. PDF-Rendering laeuft ueber pypdfium2 (BSD-3-Clause / Apache-2.0).",
+  "formats": {
+    "docx": {
+      "beschreibung": "Word ab 2007",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Echte Markdown-Struktur: Ueberschriften, Tabellen mit Kopfzeilentrenner, Fettungen. Gemessen 2026-08-17: 44 Ueberschriften und 29 Tabellenzeilen, wo die flache Extraktion 0 liefert.",
+          "schwaeche": "Kein .doc (Altformat)."
+        },
+        {
+          "id": "python-docx-native",
+          "produces": "text",
+          "license": "MIT",
+          "requires_python": ["docx"],
+          "staerke": "Keine Zusatzabhaengigkeit ausser python-docx; robuster Fallback.",
+          "schwaeche": "Flacher Text ohne Struktur. ACHTUNG: verbundene Tabellenzellen muessen dedupliziert werden - die naive Schleife ueber row.cells vervielfacht sie (gemessen Faktor 17,8). doc_services.extract behebt das."
+        }
+      ]
+    },
+    "doc": {
+      "beschreibung": "Word-Altformat (binaer)",
+      "backends": [
+        {
+          "id": "antiword",
+          "produces": "text",
+          "license": "extern (GPL-Programm, prozess-separat aufgerufen)",
+          "requires_binary": ["antiword"],
+          "staerke": "Schnell und schlank.",
+          "schwaeche": "Nur Text. Prozess-separater Aufruf, daher keine Linking-Bindung."
+        },
+        {
+          "id": "libreoffice",
+          "produces": "text",
+          "license": "extern (MPL-2.0-Programm, prozess-separat aufgerufen)",
+          "requires_binary": ["soffice"],
+          "staerke": "Deckt ab, woran antiword scheitert.",
+          "schwaeche": "Langsam (Headless-Start je Datei)."
+        }
+      ]
+    },
+    "xlsx": {
+      "beschreibung": "Excel ab 2007",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Tabellen als echte Markdown-Tabellen mit Kopfzeile.",
+          "schwaeche": "Formeln werden als Ergebniswert gelesen, nicht als Formel."
+        },
+        {
+          "id": "openpyxl-native",
+          "produces": "text",
+          "license": "MIT",
+          "requires_python": ["openpyxl"],
+          "staerke": "Direkter Zellzugriff, Formeln lesbar.",
+          "schwaeche": "Ausgabe ist flacher Text."
+        }
+      ]
+    },
+    "xls": {
+      "beschreibung": "Excel-Altformat",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Deckt auch das Altformat ab.",
+          "schwaeche": "-"
+        }
+      ]
+    },
+    "pdf": {
+      "beschreibung": "PDF - Textebene bevorzugt, OCR nur wenn noetig",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Strukturierte Ausgabe, permissiver Stack (pdfminer.six, MIT).",
+          "schwaeche": "BELEGT 2026-08-17: verliert bei LaTeX-PDFs Wortabstaende - 92,5 klein-nach-GROSS-Uebergaenge je 1000 Tokens gegen 19,4 in der TeX-Quelle, konzentriert auf Ueberschriften. Bei eigenen Papers die .tex-Quelle nutzen."
+        },
+        {
+          "id": "pypdf-native",
+          "produces": "text",
+          "license": "BSD-3-Clause",
+          "requires_python": ["pypdf"],
+          "staerke": "Sehr schlank, gut fuer reine Textextraktion und Metadaten.",
+          "schwaeche": "Keine Struktur."
+        },
+        {
+          "id": "ocr-tesseract",
+          "produces": "text",
+          "license": "Apache-2.0 (Tesseract) + BSD-3/Apache-2.0 (pypdfium2)",
+          "requires_python": ["pytesseract", "PIL", "pypdfium2"],
+          "requires_binary": ["tesseract"],
+          "staerke": "Einziger Weg bei gescannten PDFs ohne Textebene. Rendering ueber pypdfium2 - KEIN PyMuPDF, damit keine AGPL-Bindung.",
+          "schwaeche": "Langsam, fehleranfaellig; nur einsetzen, wenn die Textebene leer ist."
+        }
+      ]
+    },
+    "pptx": {
+      "beschreibung": "PowerPoint",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Einziges bekanntes Backend hier - schliesst eine echte Luecke.",
+          "schwaeche": "-"
+        }
+      ]
+    },
+    "msg": {
+      "beschreibung": "Outlook-Nachricht",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Kopfzeilen und Rumpf strukturiert.",
+          "schwaeche": "-"
+        },
+        {
+          "id": "extract-msg-native",
+          "produces": "text",
+          "license": "GPL-3.0",
+          "requires_python": ["extract_msg"],
+          "staerke": "Sehr vollstaendige MSG-Unterstuetzung inkl. Anhaengen.",
+          "schwaeche": "WARNUNG: GPL-3.0. Nur prozess-separat oder gar nicht - NICHT in ein ausgeliefertes MIT-Modul linken."
+        }
+      ]
+    },
+    "eml": {
+      "beschreibung": "E-Mail (RFC 822)",
+      "backends": [
+        {
+          "id": "stdlib-email",
+          "produces": "text",
+          "license": "PSF (Standardbibliothek)",
+          "staerke": "Ohne jede Zusatzabhaengigkeit.",
+          "schwaeche": "Ausgabe ist flacher Text."
+        }
+      ]
+    },
+    "epub": {
+      "beschreibung": "E-Book",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Kapitelstruktur bleibt erhalten.",
+          "schwaeche": "-"
+        }
+      ]
+    },
+    "html": {
+      "beschreibung": "HTML-Seite",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Teil des markitdown-Stacks.",
+          "schwaeche": "Fuer Web-Seiten mit Navigationsballast ist der Skill defuddle oft besser."
+        }
+      ]
+    },
+    "csv": {
+      "beschreibung": "Trennzeichen-Datei",
+      "backends": [
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Wird zur Markdown-Tabelle.",
+          "schwaeche": "-"
+        },
+        {
+          "id": "stdlib-csv",
+          "produces": "text",
+          "license": "PSF (Standardbibliothek)",
+          "staerke": "Ohne Zusatzabhaengigkeit, volle Kontrolle ueber Dialekt.",
+          "schwaeche": "Keine Formatierung."
+        }
+      ]
+    },
+    "txt": {
+      "beschreibung": "Reiner Text und Markdown",
+      "backends": [
+        {
+          "id": "direkt",
+          "produces": "text",
+          "license": "PSF (Standardbibliothek)",
+          "staerke": "Nichts dazwischen - Datei wird gelesen, Encoding erkannt.",
+          "schwaeche": "-"
+        }
+      ]
+    },
+    "image": {
+      "beschreibung": "Bilddateien (jpg, png, tiff, bmp)",
+      "backends": [
+        {
+          "id": "ocr-tesseract",
+          "produces": "text",
+          "license": "Apache-2.0 (Tesseract)",
+          "requires_python": ["pytesseract", "PIL"],
+          "requires_binary": ["tesseract"],
+          "staerke": "Sprachen deu+eng, Konfidenzwerte verfuegbar.",
+          "schwaeche": "Qualitaet haengt stark an der Vorlage."
+        },
+        {
+          "id": "markitdown",
+          "produces": "markdown",
+          "license": "MIT",
+          "requires_python": ["markitdown"],
+          "staerke": "Liest EXIF-Metadaten mit.",
+          "schwaeche": "OCR nur, wenn ein LLM-Client konfiguriert ist."
+        }
+      ]
+    }
+  }
+}

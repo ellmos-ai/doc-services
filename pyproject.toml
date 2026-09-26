@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "doc-services"
+version = "0.1.1"
+description = "BACH-unabhängige Dokumentenextraktion, OCR und Datenschutzprüfung mit lernender Backend-Präferenz"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Lukas Geiger" }]
+keywords = ["document-extraction", "markdown", "ocr", "privacy", "llm-ingestion"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Text Processing :: Markup :: Markdown",
+]
+dependencies = []
+
+# Bewusst KEINE harten Abhängigkeiten: das Modul erkennt zur Laufzeit, was da
+# ist, und meldet Fehlendes mit Begründung (siehe doc_services/config.py).
+# PyMuPDF ist NIRGENDS enthalten - Entscheidung E08, festgehalten in
+# tests/test_no_agpl.py.
+[project.optional-dependencies]
+markitdown = ["markitdown[all]>=0.1.7"]
+office = ["python-docx>=1.1", "openpyxl>=3.1"]
+pdf = ["pypdf>=4.0"]
+ocr = ["pytesseract>=0.3.10", "pillow>=10.0", "pypdfium2>=4.0"]
+all = [
+  "markitdown[all]>=0.1.7",
+  "python-docx>=1.1",
+  "openpyxl>=3.1",
+  "pypdf>=4.0",
+  "pytesseract>=0.3.10",
+  "pillow>=10.0",
+  "pypdfium2>=4.0",
+]
+test = ["pytest>=8.0", "ruff>=0.6"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.urls]
+Repository = "https://github.com/ellmos-ai/doc-services"
+Issues = "https://github.com/ellmos-ai/doc-services/issues"
+Documentation = "https://github.com/ellmos-ai/doc-services#readme"
+"German Documentation" = "https://github.com/ellmos-ai/doc-services/blob/master/README_de.md"
+"Security Policy" = "https://github.com/ellmos-ai/doc-services/blob/master/SECURITY.md"
+"LLM Context Index" = "https://github.com/ellmos-ai/doc-services/blob/master/llms.txt"
+"Marketing Log" = "https://github.com/ellmos-ai/doc-services/blob/master/MARKETING-LOG.txt"
+
+[tool.setuptools]
+packages = ["doc_services"]
+
+[tool.setuptools.package-data]
+doc_services = ["../profil.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra -v"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]

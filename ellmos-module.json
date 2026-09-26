@@ -1,0 +1,98 @@
+{
+  "$schema": "ellmos-module-v1",
+  "name": "doc-services",
+  "display_name": "Doc Services",
+  "version": "0.1.1",
+  "kind": "standalone-module",
+  "visibility": "public",
+  "repository": "https://github.com/ellmos-ai/doc-services",
+  "description": "Dokumentenextraktion nach Text/Markdown mit lernender Backend-Präferenz und ehrlichem Fallback, OCR ohne AGPL-Bindung und inhaltsbasierte Datenschutzprüfung vor Weitergabe an Dritte.",
+
+  "origin": {
+    "source": "BACH system/hub/_services/document/ (document_pipeline.py, privacy_classifier.py, redaction_service.py) + system/tools/ocr/engine.py",
+    "extracted": "2026-08-18",
+    "neutralization": "Keine Importe aus hub/tools/bach_paths, keine SQLite-Kopplung, keine Klienten- oder Förderberichtslogik. Konfiguration über profil.json (Katalog) und config.json (Hostlage, außerhalb des Repos).",
+    "decision_ref": "_control-center/_DECISIONS/DECISION-BRIEFING_caveman-markitdown_2026-08-17.md (E01-E08, 2026-08-18)"
+  },
+
+  "authors": ["ellmos", "BACH Contributors"],
+  "license": "MIT",
+
+  "privacy": {
+    "level": "public-code-sensitive-data",
+    "client_data": false,
+    "note": "Der Modulcode ist unbedenklich. Verarbeitete Dokumente können personenbezogen sein; das Modul bringt deshalb selbst die fail-closed Prüfung darf_weitergegeben_werden() mit."
+  },
+
+  "capabilities": [
+    "extract-to-markdown",
+    "extract-to-text",
+    "backend-preference-chain",
+    "backend-availability-detection",
+    "merged-cell-safe-docx",
+    "ocr-image",
+    "ocr-pdf-agpl-free",
+    "pdf-textlayer-detection",
+    "privacy-classify-content",
+    "privacy-gate-fail-closed"
+  ],
+
+  "required_dependencies": {},
+
+  "optional_dependencies": {
+    "markitdown": "Strukturiertes Markdown für docx/xlsx/pdf/pptx/epub/html/csv/msg (MIT)",
+    "python-docx": "DOCX-Fallback ohne Markdown-Struktur (MIT)",
+    "openpyxl": "XLSX-Fallback mit Formelzugriff (MIT)",
+    "pypdf": "PDF-Textebene und Metadaten (BSD-3-Clause)",
+    "pytesseract": "OCR-Anbindung an Tesseract (Apache-2.0)",
+    "pillow": "Bildverarbeitung für OCR (MIT-CMU)",
+    "pypdfium2": "PDF-Rendering für OCR (BSD-3-Clause / Apache-2.0) — ERSETZT PyMuPDF"
+  },
+
+  "forbidden_dependencies": {
+    "PyMuPDF": "AGPL-3.0. Geerbte Copyleft blockiert die Auslieferung eines MIT-Moduls. Entscheidung E08 vom 2026-08-18; durchgesetzt in tests/test_no_agpl.py.",
+    "textract": "zieht GPL-Abhängigkeiten nach"
+  },
+
+  "entrypoints": {
+    "main": "doc_services",
+    "extract": "doc_services.extract:extrahieren",
+    "registry": "doc_services.config:registry",
+    "privacy_gate": "doc_services.privacy:darf_weitergegeben_werden",
+    "ocr": "doc_services.ocr:ocr_datei"
+  },
+
+  "storage": {
+    "catalog": {
+      "path": "profil.json",
+      "note": "Gehört zum Lieferumfang. Beschreibt, was es je Format theoretisch gibt."
+    },
+    "config": {
+      "env": "DOC_SERVICES_CONFIG",
+      "default_windows": "%LOCALAPPDATA%\\doc-services\\config.json",
+      "default_unix": "$XDG_CONFIG_HOME/doc-services/config.json",
+      "note": "Hostabhängige Lage: installierte Backends, Präferenzreihenfolge, Erfahrungswerte. Bewusst außerhalb des Repos."
+    }
+  },
+
+  "boundaries": {
+    "no_bach_imports": true,
+    "no_agpl_dependencies": true,
+    "standalone": true,
+    "fail_closed_privacy_gate": true,
+    "no_silent_preference_reordering": true
+  },
+
+  "known_findings": {
+    "T-20260817-825816579": "Verbundene DOCX-Tabellenzellen wurden in der BACH-Vorlage vervielfacht (gemessen 785 gegen 44 eindeutige Zellen, Faktor 17,8, ~12.750 Tokens je Datei). In diesem Modul behoben und per Regressionstest abgesichert. BACH selbst bleibt bis zur Aufhebung der Judging-Sperre unverändert (Entscheidung E07).",
+    "markitdown-latex-pdf": "markitdown verliert bei LaTeX-PDFs Wortabstände (92,5 gegen 19,4 klein-nach-GROSS-Übergänge je 1000 Tokens). Bei eigenen Papers die .tex-Quelle nutzen. Das Modul gibt diesen Hinweis zur Laufzeit aus."
+  },
+
+  "wiring": {
+    "compatible_with": ["anonymizer", "KnowledgeDigest", "document-chunker"],
+    "bundle": "ellmos-doc-handler-bundle",
+    "note": "Natürliche Kette: doc-services (Extraktion) -> document-chunker (Zerlegung) -> KnowledgeDigest/LLM. anonymizer übernimmt die Pseudonymisierung, doc-services nur die Prüfung."
+  },
+
+  "tags": ["dokumente", "extraktion", "markdown", "ocr", "datenschutz", "llm-ingestion", "backend-praeferenz"]
+}

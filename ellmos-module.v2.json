@@ -1,0 +1,49 @@
+{
+  "schema": "ellmos.module.v2",
+  "id": "doc-services",
+  "display_name": "Doc Services",
+  "version": "0.1.1",
+  "description": "Document extraction to text/Markdown with a learning backend preference and honest fallback, AGPL-free OCR, and content-based privacy screening.",
+  "package": "doc-services",
+  "entrypoints": {
+    "library": "doc_services"
+  },
+  "category": "domains",
+  "kind": "service",
+  "status": "development",
+  "visibility": "public",
+  "provides": [
+    "document.extract",
+    "document.extract_markdown",
+    "document.ocr",
+    "privacy.classify",
+    "privacy.gate"
+  ],
+  "requires": [],
+  "optional": [
+    "document.chunk"
+  ],
+  "conflicts": [],
+  "surfaces": [
+    "library"
+  ],
+  "state": {
+    "ownership": "module",
+    "location": "user-home"
+  },
+  "boundaries": {
+    "network": "none",
+    "data": "sensitive",
+    "platforms": [
+      "windows",
+      "macos",
+      "linux"
+    ]
+  },
+  "source_of_truth": {
+    "type": "git-repository",
+    "path": ".",
+    "repository": "https://github.com/ellmos-ai/doc-services"
+  },
+  "adapters": []
+}

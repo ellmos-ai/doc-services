@@ -1,0 +1,43 @@
+# doc-services
+> Document extraction to text/Markdown with learning backend preference, AGPL-free OCR, and content-based privacy screening.
+
+## Metadata
+- Version: 0.1.1
+- License: MIT
+- Last-checked: 2026-09-14
+- Status: Active development
+- Repository: https://github.com/ellmos-ai/doc-services
+
+## Core Modules & API
+
+- `doc_services.extract`:
+  - `extrahieren(pfad, reg=None, lernen=True, nur_backend=None, produces=None)` -> `Ergebnis`
+  - Resolves file format via `format_von(pfad)` and runs extraction through preference chain.
+  - Supports `produces="text"` or `produces="markdown"` to narrow backends without losing fallbacks.
+  - Implements XML element deduplication for merged DOCX table cells (preventing token duplication).
+
+- `doc_services.ocr`:
+  - `ocr_bild(pfad, sprache="deu+eng")` -> `OCRErgebnis`
+  - `ocr_pdf(pfad, sprache="deu+eng", seiten=None, dpi=300)` -> `OCRErgebnis`
+  - PDF rasterization strictly uses `pypdfium2` (BSD-3-Clause / Apache-2.0). PyMuPDF (`fitz`, AGPL) is excluded.
+
+- `doc_services.privacy`:
+  - `darf_weitergegeben_werden(pfad_oder_text, ist_text=False, erlaube_gelb=False)` -> `(bool, Befund)`
+  - Content-based inspection for IBAN, Tax IDs, SSN, healthcare records, API keys, private keys.
+  - Default is fail-closed (RED and YELLOW block). Secrets are masked in generated reports.
+
+- `doc_services.config`:
+  - `registry(profil_pfad=None, config_pfad=None)` -> `Registry`
+  - Separates catalogue (`profil.json`) from host configuration (`config.json`).
+  - Learning preference tracking (successes and failures counted; reordering is proposed, not silently applied).
+
+## Key Invariants
+- 100% Permissive licensing: zero AGPL dependencies.
+- Zero network egress: operates entirely offline.
+- Unprivileged user mode: runs as `RunAsInvoker`.
+- Fail-closed privacy gate: blocks sensitive disclosures.
+
+## Verification Commands
+- `python -m pytest -ra -v`: Run full contract and unit test suite.
+- `python -m ruff check .`: Lint python source files.
+- `python -m compileall -q doc_services tests docs`: Validate python syntax.
