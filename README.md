@@ -108,6 +108,13 @@ API tokens) and uses path patterns only *in addition*.
 The default is **fail-closed**: RED and YELLOW block. Matches are masked in the report — a report
 that leaks the secret would defeat its purpose.
 
+File screening reads at most 2 MiB plus one overflow byte. Larger files are classified
+YELLOW with an incomplete-screening warning and blocked by default; a checked prefix
+never establishes that the whole file is safe. `Klassifikator.datei(max_bytes=...)`
+accepts a positive byte limit for callers that need a different bound. The existing
+`erlaube_gelb=True` override also allows incomplete screening, so use it only after
+independently reviewing the entire file.
+
 ## Install
 
 ```bash

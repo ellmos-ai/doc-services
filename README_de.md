@@ -111,6 +111,14 @@ private Schlüssel, API-Token) und nutzt Pfadmuster nur *zusätzlich*.
 Standard ist **fail-closed**: ROT und GELB blockieren. Gefundene Treffer werden im Bericht
 maskiert — ein Prüfbericht, der das Geheimnis ausplaudert, wäre sinnlos.
 
+Die Dateiprüfung liest höchstens 2 MiB plus ein zusätzliches Byte zur Erkennung
+der Übergröße. Größere Dateien erhalten GELB mit dem Hinweis auf eine unvollständige
+Prüfung und werden standardmäßig blockiert; ein geprüfter Anfang belegt niemals
+die Unbedenklichkeit der gesamten Datei. `Klassifikator.datei(max_bytes=...)`
+erlaubt ein anderes positives Byte-Limit. Die bestehende Freigabe
+`erlaube_gelb=True` lässt auch unvollständige Prüfungen zu und sollte deshalb nur
+nach einer unabhängigen Prüfung der gesamten Datei verwendet werden.
+
 ## Installation
 
 ```bash

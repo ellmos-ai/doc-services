@@ -82,6 +82,32 @@ def test_unbedenkliche_datei_geht_durch(tmp_path):
 
 # ---------------------------------------------------------------- Praeferenzen
 
+def test_datei_mit_sensiblen_daten_hinter_dem_limit_blockiert(tmp_path):
+    datei = tmp_path / "notes.md"
+    datei.write_text("harmlos " * (256 * 1024) + "\nDiagnose: Beispiel\n", encoding="utf-8")
+    erlaubt, befund = darf_weitergegeben_werden(datei)
+    assert not erlaubt
+    assert befund.ampel == GELB
+    assert not befund.unbedenklich
+    assert "vollständig" in befund.bericht()
+
+
+@pytest.mark.parametrize("inhalt", ["abcd", "ää"])
+def test_datei_am_byte_limit_wird_vollstaendig_geprueft(tmp_path, inhalt):
+    datei = tmp_path / "notes.md"
+    datei.write_text(inhalt, encoding="utf-8")
+    assert Klassifikator().datei(datei, max_bytes=4).unbedenklich
+    befund = Klassifikator().datei(datei, max_bytes=3)
+    assert befund.ampel == GELB
+    assert not befund.unbedenklich
+
+
+@pytest.mark.parametrize("limit", [0, -1])
+def test_datei_lehnt_ungueltiges_byte_limit_ab(tmp_path, limit):
+    with pytest.raises(ValueError):
+        Klassifikator().datei(tmp_path / "notes.md", max_bytes=limit)
+
+
 @pytest.fixture()
 def reg(tmp_path) -> Registry:
     return Registry(config_pfad=tmp_path / "config.json")

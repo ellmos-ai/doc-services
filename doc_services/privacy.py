@@ -139,15 +139,29 @@ class Klassifikator:
         return None
 
     def datei(self, pfad: Path | str, max_bytes: int = 2 * 1024 * 1024) -> Befund:
+        """Prüft nur vollständig gelesene Dateien; Übergröße ergibt GELB."""
+        if max_bytes <= 0:
+            raise ValueError("max_bytes muss positiv sein")
         p = Path(pfad)
         hinweis = self.pfad(p)
         try:
-            inhalt = p.read_text(encoding="utf-8", errors="replace")[:max_bytes]
+            with p.open("rb") as datei:
+                daten = datei.read(max_bytes + 1)
         except OSError as exc:
             b = Befund(ampel=GELB, pfad_hinweis=hinweis)
             b.funde.append(Fund(muster=f"nicht lesbar: {exc}", stufe=GELB, anzahl=0))
             return b
-        b = self.text(inhalt)
+        if len(daten) > max_bytes:
+            return Befund(
+                ampel=GELB,
+                pfad_hinweis=hinweis,
+                funde=[Fund(
+                    muster=f"nicht vollständig geprüft: Datei überschreitet {max_bytes} Bytes",
+                    stufe=GELB,
+                    anzahl=0,
+                )],
+            )
+        b = self.text(daten.decode("utf-8", errors="replace"))
         b.pfad_hinweis = hinweis
         if hinweis and b.ampel == GRUEN:
             b.ampel = GELB
