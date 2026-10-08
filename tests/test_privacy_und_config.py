@@ -80,8 +80,6 @@ def test_unbedenkliche_datei_geht_durch(tmp_path):
     assert erlaubt and befund.unbedenklich
 
 
-# ---------------------------------------------------------------- Praeferenzen
-
 def test_datei_mit_sensiblen_daten_hinter_dem_limit_blockiert(tmp_path):
     datei = tmp_path / "notes.md"
     datei.write_text("harmlos " * (256 * 1024) + "\nDiagnose: Beispiel\n", encoding="utf-8")
@@ -106,6 +104,41 @@ def test_datei_am_byte_limit_wird_vollstaendig_geprueft(tmp_path, inhalt):
 def test_datei_lehnt_ungueltiges_byte_limit_ab(tmp_path, limit):
     with pytest.raises(ValueError):
         Klassifikator().datei(tmp_path / "notes.md", max_bytes=limit)
+
+
+def test_dateipruefung_liest_nur_limit_plus_overflow_byte(monkeypatch):
+    """Ein großer Stream darf weder vollständig gelesen noch klassifiziert werden."""
+    from io import BytesIO
+
+    class BegrenzterStream(BytesIO):
+        def read(self, size=-1):
+            assert size == 5, "Dateiprüfung fordert mehr als Limit plus ein Byte an"
+            return super().read(size)
+
+    stream = BegrenzterStream(b"harmlos" * 1000)
+
+    def oeffnen(pfad, mode):
+        assert mode == "rb"
+        return stream
+
+    monkeypatch.setattr(Path, "open", oeffnen)
+    klassifikator = Klassifikator()
+
+    def klassifizieren(inhalt):
+        pytest.fail("Unvollständiger Inhalt darf nicht als ganze Datei klassifiziert werden")
+
+    monkeypatch.setattr(klassifikator, "text", klassifizieren)
+    assert klassifikator.datei("notes.md", max_bytes=4).ampel == GELB
+
+
+def test_nicht_lesbare_datei_blockiert_weitergabe(tmp_path):
+    erlaubt, befund = darf_weitergegeben_werden(tmp_path / "fehlt.md")
+    assert not erlaubt
+    assert befund.ampel == GELB
+    assert "nicht lesbar" in befund.bericht()
+
+
+# ---------------------------------------------------------------- Praeferenzen
 
 
 @pytest.fixture()
