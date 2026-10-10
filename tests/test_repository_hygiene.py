@@ -4,9 +4,13 @@
 from __future__ import annotations
 
 import compileall
+import sys
 from pathlib import Path
 
-import tomllib
+if sys.version_info >= (3, 11):
+    import tomllib
+else:  # Python 3.10: tomli aus den dev-Extras
+    import tomli as tomllib
 
 ROOT = Path(__file__).resolve().parent.parent
 
