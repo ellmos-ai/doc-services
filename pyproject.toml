@@ -9,9 +9,35 @@ description = "BACH-unabhängige Dokumentenextraktion, OCR und Datenschutzprüfu
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = [
+  "LICENSE",
+  "NOTICE",
+  "THIRD_PARTY_LICENSES.md",
+  "THIRD_PARTY_LICENSES.txt",
+]
 authors = [{ name = "Lukas Geiger" }]
-keywords = ["document-extraction", "markdown", "ocr", "privacy", "llm-ingestion"]
+keywords = [
+  "document-extraction",
+  "markdown",
+  "ocr",
+  "privacy",
+  "llm-ingestion",
+  "pypdfium2",
+  "agpl-free",
+  "python-docx",
+  "cell-deduplication",
+  "fail-closed",
+  "local-first",
+  "zero-egress",
+  "rag-preprocessing",
+  "mit-license",
+  "ellmos-ai",
+  "open-bricks",
+  "table-extraction",
+  "tesseract",
+  "data-protection",
+  "text-processing",
+]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
@@ -44,13 +70,22 @@ test = ["pytest>=8.0", "ruff>=0.6"]
 dev = ["pytest>=8.0", "ruff>=0.6", "tomli>=2.0; python_version < '3.11'"]
 
 [project.urls]
+Homepage = "https://github.com/ellmos-ai/doc-services"
 Repository = "https://github.com/ellmos-ai/doc-services"
 Issues = "https://github.com/ellmos-ai/doc-services/issues"
 Documentation = "https://github.com/ellmos-ai/doc-services#readme"
-"German Documentation" = "https://github.com/ellmos-ai/doc-services/blob/master/README_de.md"
-"Security Policy" = "https://github.com/ellmos-ai/doc-services/blob/master/SECURITY.md"
-"LLM Context Index" = "https://github.com/ellmos-ai/doc-services/blob/master/llms.txt"
-"Marketing Log" = "https://github.com/ellmos-ai/doc-services/blob/master/MARKETING-LOG.txt"
+"German Documentation" = "https://github.com/ellmos-ai/doc-services/blob/main/README_de.md"
+Changelog = "https://github.com/ellmos-ai/doc-services/blob/main/CHANGELOG.md"
+Contributing = "https://github.com/ellmos-ai/doc-services/blob/main/CONTRIBUTING.md"
+Notice = "https://github.com/ellmos-ai/doc-services/blob/main/NOTICE"
+"Third-Party Licenses" = "https://github.com/ellmos-ai/doc-services/blob/main/THIRD_PARTY_LICENSES.md"
+"Third-Party Licenses (Text)" = "https://github.com/ellmos-ai/doc-services/blob/main/THIRD_PARTY_LICENSES.txt"
+"Plain-Text License" = "https://github.com/ellmos-ai/doc-services/blob/main/LICENSE"
+"Security Policy" = "https://github.com/ellmos-ai/doc-services/blob/main/SECURITY.md"
+"LLM Context Index" = "https://github.com/ellmos-ai/doc-services/blob/main/llms.txt"
+"Marketing Log" = "https://github.com/ellmos-ai/doc-services/blob/main/MARKETING-LOG.txt"
+"Parent Organization" = "https://github.com/ellmos-ai"
+"Umbrella Ecosystem" = "https://github.com/open-bricks"
 
 [tool.setuptools]
 packages = ["doc_services"]
@@ -61,7 +96,9 @@ doc_services = ["../profil.json"]
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+minversion = "7.0"
 addopts = "-ra -v"
+norecursedirs = [".git", ".ruff_cache", ".pytest_cache", "__pycache__"]
 
 [tool.ruff]
 target-version = "py310"

@@ -1,5 +1,5 @@
 # MARKETING-LOG — doc-services (Document Extraction, OCR & Privacy Gate)
-# Stand: 2026-09-14 | Repository: ellmos-ai/doc-services | Lizenz: MIT | Version: 0.1.1
+# Stand: 2026-10-18 | Repository: ellmos-ai/doc-services | Lizenz: MIT | Version: 0.1.1 (Frozen per T-20260920-167562623)
 
 ## 1. Positionierung & Kernnutzen (Value Proposition)
 
@@ -60,7 +60,8 @@ Agenten und LLMs müssen Dokumente (PDF, DOCX, XLSX, PPTX, Bilder) lesen können
 
 `doc-services`, `document-extraction`, `markdown`, `ocr`, `tesseract`, `pypdfium2`, `agpl-free`,
 `python-docx`, `merged-cell-deduplication`, `privacy-classifier`, `fail-closed`, `local-first`,
-`zero-egress`, `llm-ingestion`, `rag-preprocessing`, `mit-license`, `ellmos-ai`
+`zero-egress`, `llm-ingestion`, `rag-preprocessing`, `mit-license`, `ellmos-ai`, `open-bricks`,
+`table-extraction`, `data-protection`, `text-processing`
 
 ---
 
@@ -76,3 +77,32 @@ Agenten und LLMs müssen Dokumente (PDF, DOCX, XLSX, PPTX, Bilder) lesen können
 - **INV-LOCAL-08**: PEP 621 Standardisierung in `pyproject.toml`.
 - **INV-LOCAL-09**: Version 0.1.1 über alle Manifeste harmonisiert.
 - **INV-LOCAL-10**: 48h SLA für Sicherheits- und Integritätsmeldungen.
+
+---
+
+## 6. MARKETING & DISCOVERABILITY PARITY UPGRADE (PFAD B)
+
+**Date:** 2026-10-18 | **Status:** SUCCESS | **Frozen per T-20260920-167562623**
+**Repository:** `ellmos-ai/doc-services` | **Commit Ref:** HEAD
+
+### Audit-Befund & Durchgeführte Maßnahmen:
+1. **Visuelle Architektur-Topologie**:
+   - 5-Schichten Mermaid-Flowchart (`flowchart TD`) und End-to-End Extraktions-/Datenschutz-Sequenzdiagramm (`sequenceDiagram` mit `autonumber`) in `README.md` und `README_de.md` integriert.
+   - ASCII Four-View Architectural Topology (`[VIEW 1..VIEW 4]` / `[SICHT 1..SICHT 4]`) mit Projektion aller 10 Invarianten `INV-LOCAL-01..INV-SLA-10`.
+2. **18-Punkte Bilinguale Schnellnavigation**:
+   - Vollständige bilaterale Navigation in Englisch und Deutsch mit reziproken dualen HTML-Ankern (`<a id="sec-01"></a>..<a id="sec-18"></a>` Aliases).
+3. **Level 1 SBOM & Transparenz**:
+   - `THIRD_PARTY_LICENSES.md` und plain-text Begleitdatei `THIRD_PARTY_LICENSES.txt` auditiert: 100% permissiv, Zero-Copyleft-Garantie, `RunAsInvoker`-Zertifizierung.
+4. **Governance & Rechtliche Härtung**:
+   - Gesetzlicher Hinweis nach deutschem Schenkungs- und Gefälligkeitsrecht (§ 521 BGB) und verbindliche 48h-SLA in Section 18 verankert.
+   - Root-Attribution `NOTICE` erstellt.
+   - Bilinguale `CONTRIBUTING.md` mit Plan D Workflow und Qualitäts-Gates erstellt.
+5. **PEP 621 Metadaten**:
+   - 20 Keywords voll gesättigt, URLs erweitert, `license-files` aktualisiert.
+6. **Automatisierte Vertragstests**:
+   - `tests/test_metadata.py` implementiert zur Absicherung aller Marketing- und Dokumentationsverträge.
+
+### Handlungsempfehlungen für nächste Zyklen:
+- `[REC-20261018-01]` Erwägung eines Standalone-CLI-Befehls `doc-services extract <file>` und `doc-services privacy <file>` als Entrypoint im `[project.scripts]`.
+- `[REC-20261018-02]` Optionale Unterstützung für `openpyxl` Zellendeduplizierung analog zu DOCX für komplexe Excel-Sheets mit fusionierten Kopfzeilen.
+- `[REC-20261018-03]` Veröffentlichung eines Tutorials zur Integration von `doc-services` in lokale LangChain- und LlamaIndex-Pipelines im Ökosystem `open-bricks`.

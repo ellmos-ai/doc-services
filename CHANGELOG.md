@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Marketing, Design & Discoverability Parity Upgrade (Pfad B — Stand 2026-10-18)**:
+  - **Visual Architecture Topology**:
+    - Integrated dual Mermaid diagrams (5-layer architecture flowchart TD and end-to-end extraction/privacy lifecycle sequenceDiagram with autonumber).
+    - Added ASCII Four-View Architectural Topology projection in `README.md` and `README_de.md` (`[VIEW 1..VIEW 4]` / `[SICHT 1..SICHT 4]`) projecting all 10 invariants `INV-LOCAL-01..INV-SLA-10`.
+  - **18-Point Bilingual Navigation Parity**:
+    - Harmonized 18-point quick navigation across English and German READMEs with reciprocal dual HTML anchors (`<a id="sec-01"></a>..<a id="sec-18"></a>` aliases).
+  - **Target Personas & High-Intent Queries**:
+    - Formulated 4 target developer/compliance personas (`[PERSONA-01]` to `[PERSONA-04]`) and high-intent developer search queries in English and German.
+  - **10-Dimension Comparative Matrix**:
+    - Comprehensive comparative matrix evaluating `doc-services` against PyMuPDF-based tools, naive `python-docx`, and cloud document extraction APIs.
+  - **Level 1 SBOM Transparency**:
+    - Added comprehensive Level 1 SBOM in `THIRD_PARTY_LICENSES.md` and plain-text companion `THIRD_PARTY_LICENSES.txt` auditing all 10 runtime invariants `INV-LOCAL-01..INV-SLA-10` [all 10 VERIFIED], Zero-Copyleft isolation guarantee, and `RunAsInvoker` certification.
+  - **Attribution & Governance**:
+    - Added root `NOTICE` file specifying copyright attribution under MIT for Lukas Geiger, `ellmos-ai`, and `open-bricks`.
+    - Added bilingual `CONTRIBUTING.md` guidelines detailing the Plan D local development workflow, quality gates, invariant discipline, and statutory notice.
+  - **Statutory Notice & Liability Limitation (§ 521 BGB)**:
+    - Incorporated statutory notice for gratuitous open-source provision (*Gefälligkeitsrecht* § 521 BGB) and binding 48-hour security response SLA in Section 18 of `README.md` and `README_de.md`.
+  - **PEP 621 Standardisation**:
+    - Saturated `keywords` to 20 relevant topics in `pyproject.toml`.
+    - Expanded `[project.urls]` with Notice, Contributing, Changelog, Level 1 SBOM, and umbrella links.
+    - Updated `license-files` to include `NOTICE`, `THIRD_PARTY_LICENSES.md`, and `THIRD_PARTY_LICENSES.txt`.
+  - **Automated Metadata & Contract Tests**:
+    - Added `tests/test_metadata.py` verifying all Pfad B documentation contracts, navigation anchors, Mermaid diagrams, ASCII topology, Level 1 SBOM, and frozen version invariance (`0.1.1` frozen per T-20260920-167562623).
+
 ### Fixed
 - Privacy file screening now enforces its size limit in bytes without reading the
   entire file. Oversized files receive an explicit incomplete-screening YELLOW

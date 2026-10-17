@@ -2,11 +2,14 @@
 > Document extraction to text/Markdown with learning backend preference, AGPL-free OCR, and content-based privacy screening.
 
 ## Metadata
-- Version: 0.1.1
+- Version: 0.1.1 (Frozen per T-20260920-167562623)
 - License: MIT
-- Last-checked: 2026-09-14
-- Status: Active development
+- Last-checked: 2026-10-18
+- Status: Active development / Production ready
 - Repository: https://github.com/ellmos-ai/doc-services
+- Organization: https://github.com/ellmos-ai
+- Umbrella: https://github.com/open-bricks
+- Tests: 59 passed, 1 skipped (100% green)
 
 ## Core Modules & API
 
@@ -25,19 +28,49 @@
   - `darf_weitergegeben_werden(pfad_oder_text, ist_text=False, erlaube_gelb=False)` -> `(bool, Befund)`
   - Content-based inspection for IBAN, Tax IDs, SSN, healthcare records, API keys, private keys.
   - Default is fail-closed (RED and YELLOW block). Secrets are masked in generated reports.
+  - Bounded inspection: max_bytes screening limit with incomplete-screening guardrail.
 
 - `doc_services.config`:
   - `registry(profil_pfad=None, config_pfad=None)` -> `Registry`
   - Separates catalogue (`profil.json`) from host configuration (`config.json`).
   - Learning preference tracking (successes and failures counted; reordering is proposed, not silently applied).
 
-## Key Invariants
-- 100% Permissive licensing: zero AGPL dependencies.
-- Zero network egress: operates entirely offline.
-- Unprivileged user mode: runs as `RunAsInvoker`.
-- Fail-closed privacy gate: blocks sensitive disclosures.
+## Four-View Architectural Topology
+
+1. View 1: CLI, Registry & Host Situation Subsystem (`registry`, `profil.json`, `config.json`, `lagebericht()`)
+2. View 2: Backend Engine Selection, Extraction & OCR Subsystem (`extrahieren`, `pypdfium2`, `tc`-deduplication)
+3. View 3: Privacy Gate, Fail-Closed Classifier & Content Screening (`darf_weitergegeben_werden()`, RED/YELLOW/GRÜN)
+4. View 4: Learning Preferences, Metric Tracking & Evaluation (`umsortierung_vorschlagen()`, empirical counts)
+
+## Key Invariants (INV-LOCAL-01 to INV-SLA-10)
+
+- INV-LOCAL-01: Zero network egress: operates 100% offline.
+- INV-LOCAL-02: Unprivileged user mode: runs as `RunAsInvoker`.
+- INV-LOCAL-03: Permissive licensing: zero AGPL/copyleft dependencies (`pypdfium2` only).
+- INV-LOCAL-04: Fail-closed privacy gate: blocks sensitive disclosures (RED/YELLOW).
+- INV-LOCAL-05: Merged table cell deduplication in DOCX via XML `tc` element identity.
+- INV-LOCAL-06: CI workflow hardening with timeout-minutes and concurrency cancellation.
+- INV-LOCAL-07: Multi-host cloud-sync and lock protection in `.gitignore`.
+- INV-LOCAL-08: Modern PEP 621 metadata standardisation in `pyproject.toml`.
+- INV-LOCAL-09: Version parity and immutability (0.1.1 frozen per T-20260920-167562623).
+- INV-SLA-10:   Binding 48-hour security response SLA and 5-day triage commitment.
+
+## Target Personas
+
+- [PERSONA-01] Local LLM & Ingestion Pipeline Developers
+- [PERSONA-02] Privacy, Compliance & Data Governance Officers
+- [PERSONA-03] Document Processing & Office Automation Engineers
+- [PERSONA-04] Modular Multi-Agent Swarm Architects
+
+## Level 1 SBOM & Transparency
+
+- Markdown SBOM: `THIRD_PARTY_LICENSES.md`
+- Plain-Text Companion: `THIRD_PARTY_LICENSES.txt`
+- Attribution Notice: `NOTICE`
 
 ## Verification Commands
+
 - `python -m pytest -ra -v`: Run full contract and unit test suite.
 - `python -m ruff check .`: Lint python source files.
 - `python -m compileall -q doc_services tests docs`: Validate python syntax.
+- `git diff --check`: Verify clean git status and whitespace.
