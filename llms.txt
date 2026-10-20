@@ -9,7 +9,7 @@
 - Repository: https://github.com/ellmos-ai/doc-services
 - Organization: https://github.com/ellmos-ai
 - Umbrella: https://github.com/open-bricks
-- Tests: 59 passed, 1 skipped (100% green)
+- Tests: run the verification commands below for the current host and optional backends.
 
 ## Core Modules & API
 
@@ -28,6 +28,8 @@
   - `darf_weitergegeben_werden(pfad_oder_text, ist_text=False, erlaube_gelb=False)` -> `(bool, Befund)`
   - Content-based inspection for IBAN, Tax IDs, SSN, healthcare records, API keys, private keys.
   - Default is fail-closed (RED and YELLOW block). Secrets are masked in generated reports.
+  - Call explicitly after extraction: `darf_weitergegeben_werden(result.text, ist_text=True)`.
+  - Binary DOCX paths are not extracted by the privacy helper; extraction alone never authorizes disclosure.
   - Bounded inspection: max_bytes screening limit with incomplete-screening guardrail.
 
 - `doc_services.config`:

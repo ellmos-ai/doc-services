@@ -87,6 +87,7 @@ flowchart TD
         FMT["Format Detection (format_von())"]
         PRODUCES["Output Filtering (produces='text' | 'markdown')"]
         DEDUP["DOCX XML tc Cell Deduplication (INV-LOCAL-05)"]
+        CALLER["Caller explicitly screens extracted text"]
     end
 
     subgraph OCRLayer ["AGPL-Free OCR Engine (pypdfium2 & Tesseract)"]
@@ -123,7 +124,8 @@ flowchart TD
     TESS --> OCR_IMG
     TESS --> OCR_PDF
 
-    EXTRACT --> PRIVACY
+    EXTRACT --> CALLER
+    CALLER --> PRIVACY
     PRIVACY --> RED
     PRIVACY --> YELLOW
     PRIVACY --> GREEN
@@ -213,19 +215,20 @@ sequenceDiagram
         end
     end
 
-    Extractor->>Privacy: darf_weitergegeben_werden(extracted_text)
+    Extractor->>Registry: Record backend success
+    Extractor-->>Caller: Ergebnis(text, backend, produces, hinweise)
+    Note over Caller,Privacy: Extraction does not run the privacy gate automatically
+    Caller->>Privacy: darf_weitergegeben_werden(result.text, ist_text=True)
     alt Sensitive content detected (RED / YELLOW)
-        Privacy-->>Extractor: Block verdict (allowed=False, masked findings)
+        Privacy-->>Caller: Block verdict (allowed=False, masked findings)
     else Content clean (GREEN)
-        Privacy-->>Extractor: Approved verdict (allowed=True)
+        Privacy-->>Caller: Approved verdict (allowed=True)
     end
 
-    Extractor->>Registry: Record backend success
     opt Human approves proposed changes
         Registry->>Storage: Persist updated preference counts
     end
 
-    Extractor-->>Caller: Ergebnis(text, backend, produces, allowed, hinweise)
 ```
 
 ---
@@ -363,14 +366,15 @@ In LaTeX-generated PDFs, running a markdown converter can severely degrade word 
 <a id="sec-10"></a><a id="fail-closed-privacy-classifier--content-screening"></a>
 ## 10. Fail-Closed Privacy Classifier & Content Screening
 
-File names can be misleading. Credentials frequently hide in files named `notes.md` or `test_data.json`. `doc-services` screens the **actual contents** before allowing dissemination:
+File names can be misleading. Credentials frequently hide in files named `notes.md` or `test_data.json`. `doc-services` provides explicit content screening before dissemination. For binary formats such as DOCX, first extract the text, then screen it with `ist_text=True`. Passing a DOCX path directly to the privacy helper reads raw archive bytes and can miss sensitive text; `extrahieren()` does not invoke the privacy gate automatically:
 
 ```python
-from doc_services import darf_weitergegeben_werden
+from doc_services import darf_weitergegeben_werden, extrahieren
 
-allowed, verdict = darf_weitergegeben_werden("project_notes.docx")
+extracted = extrahieren("project_notes.docx", produces="text", lernen=False)
+allowed, verdict = darf_weitergegeben_werden(extracted.text, ist_text=True)
 if not allowed:
-    print(f"Dissemination BLOCKED: {verdict.stufe}")
+    print(f"Dissemination BLOCKED: {verdict.ampel}")
     print(verdict.bericht())  # Sensitive values are masked (e.g. DE89 **** ****)
 ```
 

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed — 2026-10-20
+- README privacy recipes now extract DOCX text before screening it explicitly with `ist_text=True`; screening raw ZIP bytes could miss an IBAN. Both language examples use the actual `Befund.ampel` attribute.
+- Architecture diagrams now show the caller invoking privacy screening separately from extraction, and no longer claim an `allowed` field on extraction results. Executed README regression tests cover clean and sensitive DOCX content in both languages.
+
 ### Added
 - **Marketing, Design & Discoverability Parity Upgrade (Pfad B — Stand 2026-10-18)**:
   - **Visual Architecture Topology**:

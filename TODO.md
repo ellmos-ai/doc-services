@@ -1,5 +1,10 @@
 # TODO — doc-services
 
+## Offene Dokumentationsabnahme — 2026-10-20
+
+- [ ] Pauschale Zero-Copyleft-/vollständige SBOM-Aussagen gegen `profil.json` (externe antiword-/LibreOffice-Backends) und die optionalen transitiven Abhängigkeiten abgleichen. Vorhandene Import-/Metadatentests sind kein vollständiger Lieferketten-Audit.
+- [ ] Rechtliche Haftungsaussagen und die als verbindlich bezeichnete Sicherheits-SLA fachlich beziehungsweise durch den zuständigen Owner bestätigen lassen; der Spiegelabgleich ist keine solche Abnahme.
+
 Diese Datei ist die TASKWRITER-Erfassung zum Bundle vom 2026-09-05 sowie das
 Aufgaben- und Statusregister für Wartungs- und Hygienezwecke.
 

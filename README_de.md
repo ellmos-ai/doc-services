@@ -87,6 +87,7 @@ flowchart TD
         FMT["Formaterkennung (format_von())"]
         PRODUCES["Ausgabefilterung (produces='text' | 'markdown')"]
         DEDUP["DOCX XML tc Zellendeduplizierung (INV-LOCAL-05)"]
+        CALLER["Aufrufer prüft extrahierten Text ausdrücklich"]
     end
 
     subgraph OCRLayer ["AGPL-freie OCR-Engine (pypdfium2 & Tesseract)"]
@@ -123,7 +124,8 @@ flowchart TD
     TESS --> OCR_IMG
     TESS --> OCR_PDF
 
-    EXTRACT --> PRIVACY
+    EXTRACT --> CALLER
+    CALLER --> PRIVACY
     PRIVACY --> RED
     PRIVACY --> YELLOW
     PRIVACY --> GREEN
@@ -213,19 +215,20 @@ sequenceDiagram
         end
     end
 
-    Extraktor->>Datenschutz: darf_weitergegeben_werden(extrahierter_text)
+    Extraktor->>Registry: Erfolg registrieren
+    Extraktor-->>Aufrufer: Ergebnis(text, backend, produces, hinweise)
+    Note over Aufrufer,Datenschutz: Extraktion führt die Datenschutzprüfung nicht automatisch aus
+    Aufrufer->>Datenschutz: darf_weitergegeben_werden(ergebnis.text, ist_text=True)
     alt Sensible Daten entdeckt (ROT / GELB)
-        Datenschutz-->>Extraktor: Blockade (allowed=False, maskierter Bericht)
+        Datenschutz-->>Aufrufer: Blockade (allowed=False, maskierter Bericht)
     else Inhalt unbedenklich (GRÜN)
-        Datenschutz-->>Extraktor: Freigabe (allowed=True)
+        Datenschutz-->>Aufrufer: Freigabe (allowed=True)
     end
 
-    Extraktor->>Registry: Erfolg registrieren
     opt Menschliche Freigabe bestätigt
         Registry->>Speicher: Aktualisierte Zähler persistieren
     end
 
-    Extraktor-->>Aufrufer: Ergebnis(text, backend, produces, allowed, hinweise)
 ```
 
 ---
@@ -362,14 +365,15 @@ Bei LaTeX-generierten PDFs führt eine Markdown-Wandlung häufig zu Wortkollisio
 <a id="sec-10"></a><a id="fail-closed-datenschutz-klassifikator--inhaltsprüfung"></a>
 ## 10. Fail-Closed Datenschutz-Klassifikator & Inhaltsprüfung
 
-Dateinamen sind oft irreführend. Zugangsdaten liegen häufig in Dateien mit unverdächtigen Namen wie `notizen.md`. `doc-services` prüft den **tatsächlichen Dateiinhalt**:
+Dateinamen sind oft irreführend. Zugangsdaten liegen häufig in Dateien mit unverdächtigen Namen wie `notizen.md`. `doc-services` stellt eine ausdrücklich aufzurufende Inhaltsprüfung bereit. Bei Binärformaten wie DOCX zuerst den Text extrahieren und danach mit `ist_text=True` prüfen. Ein DOCX-Pfad direkt am Datenschutzhelfer liest rohe Archivbytes und kann sensible Textinhalte übersehen; `extrahieren()` ruft die Datenschutzprüfung nicht automatisch auf:
 
 ```python
-from doc_services import darf_weitergegeben_werden
+from doc_services import darf_weitergegeben_werden, extrahieren
 
-erlaubt, befund = darf_weitergegeben_werden("notizen.docx")
+extrahiert = extrahieren("notizen.docx", produces="text", lernen=False)
+erlaubt, befund = darf_weitergegeben_werden(extrahiert.text, ist_text=True)
 if not erlaubt:
-    print(f"Weitergabe BLOCKIERT: {befund.stufe}")
+    print(f"Weitergabe BLOCKIERT: {befund.ampel}")
     print(befund.bericht())  # Maskiert sensible Treffer (z.B. DE89 **** ****)
 ```
 
