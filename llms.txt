@@ -4,7 +4,7 @@
 ## Metadata
 - Version: 0.1.1 (Frozen per T-20260920-167562623)
 - License: MIT
-- Last-checked: 2026-10-18
+- Last-checked: 2026-10-30
 - Status: Active development / Production ready
 - Repository: https://github.com/ellmos-ai/doc-services
 - Organization: https://github.com/ellmos-ai

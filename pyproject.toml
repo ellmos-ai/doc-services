@@ -16,6 +16,7 @@ license-files = [
   "THIRD_PARTY_LICENSES.txt",
 ]
 authors = [{ name = "Lukas Geiger" }]
+maintainers = [{ name = "Lukas Geiger" }]
 keywords = [
   "document-extraction",
   "markdown",
@@ -39,11 +40,21 @@ keywords = [
   "text-processing",
 ]
 classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Legal Industry",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Natural Language :: German",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Topic :: Security",
+  "Topic :: Text Processing :: General",
   "Topic :: Text Processing :: Markup :: Markdown",
 ]
 dependencies = []

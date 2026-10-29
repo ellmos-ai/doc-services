@@ -318,9 +318,9 @@ def test_marketing_log_pfad_b_contract():
 
 
 def test_llms_txt_version_and_recency():
-    """Verify llms.txt reflects v0.1.1, 2026-10-18 stamp, and green test baseline."""
+    """Verify llms.txt reflects v0.1.1, 2026-10-30 stamp, and green test baseline."""
     content = _read_text("llms.txt")
     assert "Version: 0.1.1" in content
-    assert "Last-checked: 2026-10-18" in content
+    assert "Last-checked: 2026-10-30" in content
     assert "INV-LOCAL-01" in content
     assert "Four-View Architectural Topology" in content

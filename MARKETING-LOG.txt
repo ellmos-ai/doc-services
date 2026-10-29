@@ -106,3 +106,31 @@ Agenten und LLMs müssen Dokumente (PDF, DOCX, XLSX, PPTX, Bilder) lesen können
 - `[REC-20261018-01]` Erwägung eines Standalone-CLI-Befehls `doc-services extract <file>` und `doc-services privacy <file>` als Entrypoint im `[project.scripts]`.
 - `[REC-20261018-02]` Optionale Unterstützung für `openpyxl` Zellendeduplizierung analog zu DOCX für komplexe Excel-Sheets mit fusionierten Kopfzeilen.
 - `[REC-20261018-03]` Veröffentlichung eines Tutorials zur Integration von `doc-services` in lokale LangChain- und LlamaIndex-Pipelines im Ökosystem `open-bricks`.
+
+
+---
+
+## 7. REPOSITORY-HYGIENE, CI-MATRIX-HÄRTUNG & PEP-621-METADATEN (PFAD A)
+
+**Date:** 2026-10-30 | **Status:** SUCCESS | **Frozen per T-20260920-167562623**
+**Repository:** `ellmos-ai/doc-services` | **Commit Ref:** HEAD
+
+### Audit-Befund & Durchgeführte Maßnahmen:
+1. **Tri-Platform CI-Matrix-Härtung**:
+   - `.github/workflows/ci.yml` um `macos-latest` zu einer vollständigen 12-fach Matrix (`ubuntu-latest`, `windows-latest`, `macos-latest` über Python 3.10, 3.11, 3.12 und 3.13) erweitert.
+   - Concurrency mit `cancel-in-progress: true` und `timeout-minutes: 15` verifiziert.
+2. **Dependabot Ecosystem Security**:
+   - `.github/dependabot.yml` angelegt mit security-only pip-Policy (gruppierte Security-Updates, 0 unkontrollierte Version-Bumps) und wöchentlichen GitHub Actions Updates (Europe/Berlin Takt, Limit 3).
+3. **PEP 621 Metadaten**:
+   - `maintainers = [{ name = "Lukas Geiger" }]` in `pyproject.toml` ergänzt.
+   - Enriched Classifiers: OS Independent, Natural Language (English, German), Intended Audience (Developers, Legal Industry, Science/Research), Topic (Security, Text Processing).
+   - Strikt 0 Versionsänderungen (Version 0.1.1 unverändert per T-20260920-167562623).
+4. **Dokumentation & Kontext**:
+   - Shields.io Badges in `README.md` und `README_de.md` auf Verified 2026-10-30 aktualisiert.
+   - `llms.txt` Last-checked und CI-Matrix auf Stand 2026-10-30 synchronisiert.
+   - `CHANGELOG.md` Release Notes unter `## [Unreleased]` ergänzt.
+5. **Automatisierte Vertragstests**:
+   - 3 neue Vertragstests in `tests/test_repository_hygiene.py` und `tests/test_metadata.py`:
+     - `test_ci_matrix_tri_platform_full_python_coverage`
+     - `test_dependabot_security_hardening_configured`
+     - `test_pep621_maintainers_and_classifiers`

@@ -148,3 +148,36 @@ def test_syntax_compilation():
     erfolg = erfolg and compileall.compile_dir(str(ROOT / "tests"), quiet=1)
     erfolg = erfolg and compileall.compile_dir(str(ROOT / "docs"), quiet=1)
     assert erfolg, "Syntaxfehler bei compileall gefunden"
+
+
+def test_ci_matrix_tri_platform_full_python_coverage():
+    """CI Matrix muss alle 3 Plattformen und alle Python-Versionen 3.10-3.13 abdecken."""
+    ci_yaml = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert "macos-latest" in ci_yaml, "macos-latest fehlt in CI Matrix"
+    assert "ubuntu-latest" in ci_yaml, "ubuntu-latest fehlt in CI Matrix"
+    assert "windows-latest" in ci_yaml, "windows-latest fehlt in CI Matrix"
+    for py in ["3.10", "3.11", "3.12", "3.13"]:
+        assert f'"{py}"' in ci_yaml, f"Python {py} fehlt in CI Matrix"
+
+
+def test_dependabot_security_hardening_configured():
+    """Dependabot Konfiguration muss vorhanden sein und security-only für pip erzwingen."""
+    dep_path = ROOT / ".github" / "dependabot.yml"
+    assert dep_path.is_file(), ".github/dependabot.yml fehlt"
+    inhalt = dep_path.read_text(encoding="utf-8")
+    assert 'package-ecosystem: "pip"' in inhalt or "package-ecosystem: 'pip'" in inhalt
+    assert 'package-ecosystem: "github-actions"' in inhalt or "package-ecosystem: 'github-actions'" in inhalt
+    assert "open-pull-requests-limit: 0" in inhalt, "pip open-pull-requests-limit muss 0 sein (Security-only)"
+
+
+def test_pep621_maintainers_and_classifiers():
+    """pyproject.toml muss Maintainers und mehrsprachige/plattformunabhängige Classifier deklarieren."""
+    with (ROOT / "pyproject.toml").open("rb") as f:
+        data = tomllib.load(f)
+    project = data.get("project", {})
+    maintainers = project.get("maintainers", [])
+    assert any(m.get("name") == "Lukas Geiger" for m in maintainers), "Lukas Geiger fehlt in maintainers"
+    classifiers = project.get("classifiers", [])
+    assert "Operating System :: OS Independent" in classifiers
+    assert "Natural Language :: German" in classifiers
+    assert "Natural Language :: English" in classifiers

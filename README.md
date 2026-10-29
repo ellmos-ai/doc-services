@@ -3,7 +3,7 @@
 # doc-services
 
 [![Version](https://img.shields.io/badge/version-0.1.1-blue.svg)](pyproject.toml)
-[![Verified: 2026-10-18](https://img.shields.io/badge/verified-2026--10--18-brightgreen.svg)](CHANGELOG.md)
+[![Verified: 2026-10-30](https://img.shields.io/badge/verified-2026--10--30-brightgreen.svg)](CHANGELOG.md)
 [![Attribution: NOTICE](https://img.shields.io/badge/Attribution-NOTICE-blue.svg)](NOTICE)
 [![CI](https://img.shields.io/badge/CI-passing-brightgreen.svg)](.github/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-passing%20%7C%20100%25-brightgreen.svg)](tests/)

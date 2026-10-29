@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — 2026-10-30 (Pfad A — Technical Hygiene & CI Hardening)
+- **Tri-Platform CI Matrix Hardening**:
+  - Expanded `.github/workflows/ci.yml` matrix with `macos-latest` to establish full 12-job tri-platform CI matrix (`ubuntu-latest`, `windows-latest`, `macos-latest` across Python 3.10, 3.11, 3.12, 3.13) with automated concurrency cancellation and strict 15-minute timeouts.
+- **Dependabot Security Hardening**:
+  - Added `.github/dependabot.yml` implementing organization security-only pip policy (security update groups, 0 non-security bumps) and weekly GitHub Actions dependency updates (limit: 3, Europe/Berlin timezone).
+- **PEP 621 Metadata Expansion**:
+  - Declared `maintainers = [{ name = "Lukas Geiger" }]` in `pyproject.toml`.
+  - Added enriched classifiers for OS independence, Natural Language (English, German), Intended Audience (Developers, Legal Industry, Science/Research), and Topic categorization, strictly maintaining version freeze on `0.1.1` per T-20260920-167562623.
+- **Contract & Metadata Test Expansion**:
+  - Added 3 new contract tests in `tests/test_repository_hygiene.py` and `tests/test_metadata.py` verifying tri-platform CI matrix coverage, Dependabot policy enforcement, and PEP 621 maintainers & classifier parity.
+
+
 ### Fixed — 2026-10-20
 - README privacy recipes now extract DOCX text before screening it explicitly with `ist_text=True`; screening raw ZIP bytes could miss an IBAN. Both language examples use the actual `Befund.ampel` attribute.
 - Architecture diagrams now show the caller invoking privacy screening separately from extraction, and no longer claim an `allowed` field on extraction results. Executed README regression tests cover clean and sensitive DOCX content in both languages.
