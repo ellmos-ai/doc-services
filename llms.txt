@@ -70,6 +70,13 @@
 - Plain-Text Companion: `THIRD_PARTY_LICENSES.txt`
 - Attribution Notice: `NOTICE`
 
+## Installation & Quickstart for LLMs
+
+- Prerequisites: Python >= 3.10 (optional: system `tesseract-ocr` for OCR tier)
+- Install command: `git clone https://github.com/ellmos-ai/doc-services.git && cd doc-services && python -m venv .venv && .venv/bin/pip install -e ".[all]"` (Windows: `.venv\Scripts\pip install -e ".[all]"`)
+- Verification command: `python -c "from doc_services import registry; print(registry().lagebericht())"`
+- Minimal example: `from doc_services import extrahieren, darf_weitergegeben_werden; res = extrahieren("sample.pdf", produces="text", lernen=False); ok, verdict = darf_weitergegeben_werden(res.text, ist_text=True)`
+
 ## Verification Commands
 
 - `python -m pytest -ra -v`: Run full contract and unit test suite.

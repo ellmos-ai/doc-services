@@ -411,6 +411,18 @@ pip install -e ".[dev]"
 
 *Hinweis:* Für OCR ist zusätzlich das System-Tesseract-Paket erforderlich (`tesseract-ocr`, `tesseract-ocr-deu`).
 
+### Mit deinem LLM installieren
+
+Kopiere diesen Prompt in deinen Coding-Agenten (Claude Code, Codex, Gemini CLI, Cursor), um `doc-services` lokal installieren und prüfen zu lassen:
+
+```text
+Lies https://github.com/ellmos-ai/doc-services (README_de.md und llms.txt)
+und installiere doc-services auf meinem System.
+1. Prüfe zuerst die Voraussetzungen (Python >= 3.10) und erkläre kurz, was installiert wird.
+2. Klone das Repo bzw. führe die empfohlene Installation (`pip install -e ".[all]"`) in einer isolierten Umgebung (.venv) aus, ohne fremde Projekte oder globale Systempakete ungefragt zu überschreiben.
+3. Führe danach einen kurzen Smoke-/Verifikationstest (`python -c "from doc_services import registry; print(registry().lagebericht())"`) aus und zeige mir ein kurzes Nutzungsbeispiel.
+```
+
 ---
 
 <a id="sec-12"></a><a id="cli--und-python-api-referenz"></a>
