@@ -55,6 +55,7 @@ classifiers = [
   "Topic :: Security",
   "Topic :: Text Processing :: General",
   "Topic :: Text Processing :: Markup :: Markdown",
+  "Typing :: Typed",
 ]
 dependencies = []
 
@@ -101,7 +102,7 @@ Notice = "https://github.com/ellmos-ai/doc-services/blob/main/NOTICE"
 packages = ["doc_services"]
 
 [tool.setuptools.package-data]
-doc_services = ["../profil.json"]
+doc_services = ["../profil.json", "py.typed"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

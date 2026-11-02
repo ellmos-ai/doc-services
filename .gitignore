@@ -1,6 +1,13 @@
 __pycache__/
 *.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Testing, coverage and linting caches
 .pytest_cache/
+.pytest_temp/
+.pytest_tmp*/
 .ruff_cache/
 .mypy_cache/
 .tox/
@@ -15,12 +22,51 @@ build/
 dist/
 wheelhouse/
 .wheel-smoke/
+
+# Virtual environments
 .venv/
 venv/
+env/
+
+# Editor and IDE configurations
+.idea/
+.vscode/
+*.sublime-*
+
+# Local databases, secrets and data
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+.env
+.env.*
+.env.local
+*.local.json
+config.local.*
+data/
+
+# Secret and credential protection
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+*.cert
+.npmrc
+.pypirc
+*token*
+*secret*
+credentials.json
+secrets.json
 
 # Lock protection & Cloud-Sync Multi-Host safety
 LOCK
 LOCK.*
+LOCK.user.*
+LOCK.until.*
+LOCK.condition.*
+.automation-lock
 LOCK*.txt
 LOCK.permissions.json
 *.lock
@@ -47,6 +93,7 @@ uv.lock
 # OS artifacts
 Thumbs.db
 .DS_Store
+Desktop.ini
 
 # Hostabhaengige Lage - gehoert NICHT ins Repo
 config.json

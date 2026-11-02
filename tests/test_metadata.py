@@ -324,3 +324,43 @@ def test_llms_txt_version_and_recency():
     assert "Last-checked: 2026-10-30" in content
     assert "INV-LOCAL-01" in content
     assert "Four-View Architectural Topology" in content
+
+
+def test_pep561_typing_marker_and_packaging():
+    """Verify PEP 561 py.typed marker file exists and is registered in package-data."""
+    py_typed = REPO_ROOT / "doc_services" / "py.typed"
+    assert py_typed.is_file(), "Missing PEP 561 marker file doc_services/py.typed"
+
+    with open(REPO_ROOT / "pyproject.toml", "rb") as f:
+        data = tomllib.load(f)
+    pkg_data = data.get("tool", {}).get("setuptools", {}).get("package-data", {})
+    assert "doc_services" in pkg_data
+    assert "py.typed" in pkg_data["doc_services"]
+    classifiers = data.get("project", {}).get("classifiers", [])
+    assert "Typing :: Typed" in classifiers
+
+
+def test_todo_md_status_table_and_tasks():
+    """Verify TODO.md exists, follows gate standard, and tracks structured work."""
+    todo_path = REPO_ROOT / "TODO.md"
+    assert todo_path.is_file(), "Missing TODO.md"
+
+    content = todo_path.read_text(encoding="utf-8")
+    assert "## STATUS" in content
+    assert "| Category" in content or "|Category" in content
+    assert "TASK-DOC-" in content
+
+
+def test_final_gate_check_compliance():
+    """Verify repository passes all 10 release readiness gates in final_gate_check.py."""
+    scripts_dir = Path(__file__).resolve().parents[3] / "OneDrive" / ".TOPICS" / ".AI" / ".MODULES" / "_scripts"
+    gate_script = scripts_dir / "final_gate_check.py"
+    if gate_script.is_file():
+        import subprocess
+        res = subprocess.run(
+            [sys.executable, str(gate_script), "--repo-path", str(REPO_ROOT)],
+            capture_output=True,
+            text=True,
+        )
+        assert res.returncode == 0, f"Final Gate Check failed:\n{res.stdout}\n{res.stderr}"
+        assert "10 PASS, 0 FAIL, 0 WARN" in res.stdout

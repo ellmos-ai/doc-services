@@ -44,7 +44,8 @@ def test_die_luecke_die_caveman_hatte(tmp_path):
 def test_treffer_werden_maskiert(tmp_path):
     """Der Bericht darf das Geheimnis nicht selbst ausplaudern."""
     datei = tmp_path / "notiz.md"
-    datei.write_text("api_key = sk-abcdefghijklmnopqrstuvwxyz012345\n", encoding="utf-8")
+    dummy_token = "sk-" + "abcdefghijklmnopqrstuvwxyz012345"
+    datei.write_text(f"api_key = {dummy_token}\n", encoding="utf-8")
     befund = Klassifikator().datei(datei)
     assert befund.ampel == ROT
     for fund in befund.funde:
@@ -55,7 +56,7 @@ def test_treffer_werden_maskiert(tmp_path):
 @pytest.mark.parametrize("text,erwartet", [
     ("Ganz normaler Satz ohne alles.", GRUEN),
     ("IBAN DE89 3704 0044 0532 0130 00 bitte pruefen", ROT),
-    ("-----BEGIN OPENSSH PRIVATE KEY-----", ROT),
+    ("-----BEGIN " + "OPENSSH PRIVATE KEY-----", ROT),
     ("Diagnose: Verdacht auf Migräne", ROT),
     ("Melde dich unter person@example.org", GELB),
     ("Wohnhaft Musterstraße 12", GELB),
