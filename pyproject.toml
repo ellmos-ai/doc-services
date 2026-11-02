@@ -44,7 +44,6 @@ classifiers = [
   "Intended Audience :: Developers",
   "Intended Audience :: Legal Industry",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
   "Natural Language :: English",
   "Natural Language :: German",
   "Operating System :: OS Independent",
