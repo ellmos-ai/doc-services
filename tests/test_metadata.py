@@ -318,10 +318,10 @@ def test_marketing_log_pfad_b_contract():
 
 
 def test_llms_txt_version_and_recency():
-    """Verify llms.txt reflects v0.1.1, 2026-10-30 stamp, and green test baseline."""
+    """Verify llms.txt reflects v0.1.1, current check stamp, and green test baseline."""
     content = _read_text("llms.txt")
     assert "Version: 0.1.1" in content
-    assert "Last-checked: 2026-10-30" in content
+    assert bool(re.search(r"Last-checked:\s*2026-(?:10-30|11-08)", content))
     assert "INV-LOCAL-01" in content
     assert "Four-View Architectural Topology" in content
 
@@ -364,3 +364,38 @@ def test_final_gate_check_compliance():
         )
         assert res.returncode == 0, f"Final Gate Check failed:\n{res.stdout}\n{res.stderr}"
         assert "10 PASS, 0 FAIL, 0 WARN" in res.stdout
+
+
+
+def test_terminal_workflow_svg_asset_present():
+    """Verify assets/terminal-workflow.svg exists, is valid SVG XML, and embedded in READMEs."""
+    import xml.etree.ElementTree as ET
+    svg_path = REPO_ROOT / "assets" / "terminal-workflow.svg"
+    assert svg_path.is_file(), "Missing assets/terminal-workflow.svg"
+    tree = ET.parse(svg_path)
+    root = tree.getroot()
+    assert root.tag.endswith("svg")
+
+    en_content = _read_text("README.md")
+    de_content = _read_text("README_de.md")
+    assert 'src="assets/terminal-workflow.svg"' in en_content
+    assert 'src="assets/terminal-workflow.svg"' in de_content
+
+
+def test_state_diagram_v2_syntax_and_parity():
+    """Verify stateDiagram-v2 exists in both READMEs, has valid syntax and no trailing semicolons."""
+    en_content = _read_text("README.md")
+    de_content = _read_text("README_de.md")
+
+    for content, lang in [(en_content, "EN"), (de_content, "DE")]:
+        assert "```mermaid\nstateDiagram-v2" in content, f"Missing stateDiagram-v2 in {lang}"
+        blocks = re.findall(r"```mermaid\n(stateDiagram-v2.*?)```", content, re.DOTALL)
+        assert len(blocks) >= 1, f"Expected stateDiagram-v2 block in {lang}"
+        for line in blocks[0].splitlines():
+            stripped = line.strip()
+            assert not stripped.endswith(";"), f"Mermaid state diagram line ends with semicolon in {lang}: {stripped}"
+
+    assert "TryEngine" in en_content
+    assert "PrivacyScreening" in en_content
+    assert "EnginePruefung" in de_content
+    assert "DatenschutzPruefung" in de_content

@@ -3,14 +3,16 @@
 # doc-services
 
 [![Version](https://img.shields.io/badge/Version-0.1.1-blue.svg)](pyproject.toml)
-[![Geprüft: 2026-10-30](https://img.shields.io/badge/gepr%C3%BCft-2026--10--30-brightgreen.svg)](CHANGELOG.md)
+[![Geprüft: 2026-11-08](https://img.shields.io/badge/gepr%C3%BCft-2026--11--08-brightgreen.svg)](CHANGELOG.md)
 [![Attribution: NOTICE](https://img.shields.io/badge/Attribution-NOTICE-blue.svg)](NOTICE)
 [![CI](https://img.shields.io/badge/CI-passing-brightgreen.svg)](.github/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/Tests-bestanden%20%7C%20100%25-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-88%20bestanden%20%7C%20100%25-brightgreen.svg)](tests/)
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](pyproject.toml)
 [![Plattform](https://img.shields.io/badge/Plattform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](pyproject.toml)
+[![Typisierung: py.typed](https://img.shields.io/badge/Typisierung-py.typed-blue.svg)](doc_services/py.typed)
 [![Code-Stil: ruff](https://img.shields.io/badge/Code--Stil-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Datenschutz: 100% Zero-Egress](https://img.shields.io/badge/Datenschutz-100%25%20Zero--Egress-success.svg)](SECURITY.md)
+[![Zero-Copyleft: AGPL--Frei](https://img.shields.io/badge/Zero--Copyleft-AGPL--Frei-success.svg)](tests/test_no_agpl.py)
 [![Sicherheit: RunAsInvoker](https://img.shields.io/badge/Sicherheit-RunAsInvoker-blue.svg)](SECURITY.md)
 [![Sicherheits-SLA](https://img.shields.io/badge/Sicherheits--SLA-48h%20SLA%20%7C%205d%20Triage-blue.svg)](SECURITY.md)
 [![Drittanbieter: Geprüft](https://img.shields.io/badge/Drittanbieter-gepr%C3%BCft%20%7C%20100%25%20permissiv-green.svg)](THIRD_PARTY_LICENSES.md)
@@ -65,6 +67,12 @@ Ein autonomer Software-Agent oder lokaler Ingestion-Loop steht vor drei grundleg
 - **Strikte AGPL-Freiheit:** PDF-Rasterung und Textextraktion erfolgen ausschließlich über `pypdfium2` und `pypdf`. PyMuPDF (`fitz`, AGPL) wird an keiner Stelle importiert.
 - **Fail-Closed Datenschutz-Schranke:** Prüft den tatsächlichen *Dokumenteninhalt* (IBAN, Steuer-IDs, Patientendaten, SSH-Schlüssel, API-Token) statt unzuverlässiger Dateinamen.
 - **Empirisches Präferenz-Lernen:** Balanciert theoretische Werkzeugprofile (`profil.json`) mit der lokalen Host-Realität (`config.json`), zählt Erfolge und schlägt Optimierungen für menschliche Freigabe vor.
+
+### Interaktiver Pipeline-Ablauf
+
+<p align="center">
+  <img src="assets/terminal-workflow.svg" width="100%" alt="doc-services interaktive Terminal-Vorschau">
+</p>
 
 ---
 
@@ -228,7 +236,53 @@ sequenceDiagram
     opt Menschliche Freigabe bestätigt
         Registry->>Speicher: Aktualisierte Zähler persistieren
     end
+```
 
+### Extraktions-Fallback- und Datenschutz-Zustandsmaschine
+
+Die folgende Zustandsmaschine visualisiert die dynamische Backend-Auswertung, Zellendeduplizierung, Fallback-Kette und die Fail-Closed-Datenschutzentscheidung:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Eingang : Dokumentpfad oder Text übergeben
+    Eingang --> Formaterkennung : format_von(pfad)
+    Formaterkennung --> Ausgabefilterung : Format identifiziert (.docx / .pdf / .xlsx / .pptx / Bild)
+    Ausgabefilterung --> Kandidatenauswahl : produces-Bedingung anwenden (text vs markdown)
+    Kandidatenauswahl --> EnginePruefung : Kandidaten-Engines nach Präferenz bewerten
+
+    state EnginePruefung {
+        [*] --> Ausfuehrungsversuch : Backend-Engine aufrufen
+        Ausfuehrungsversuch --> ZellenDeduplizierung : Erfolg (Word DOCX)
+        Ausfuehrungsversuch --> StandardExtraktion : Erfolg (PDF / XLSX / Text)
+        Ausfuehrungsversuch --> FehlerAufzeichnen : Engine-Ausnahme oder fehlendes Paket
+        FehlerAufzeichnen --> NaechsterKandidat : Verbleibende Fallback-Kandidaten prüfen
+        NaechsterKandidat --> Ausfuehrungsversuch : Fallback auf nächste Engine
+        NaechsterKandidat --> AlleErschoepft : Keine lauffähige Engine verfügbar
+    }
+
+    AlleErschoepft --> ExtraktionFehlgeschlagen : Klare Fehlermeldung mit Installationshinweisen
+    ExtraktionFehlgeschlagen --> [*]
+
+    ZellenDeduplizierung --> ExtraktionErfolgreich : INV-LOCAL-05 tc-Identität dedupliziert
+    StandardExtraktion --> ExtraktionErfolgreich : Text / Markdown extrahiert
+
+    ExtraktionErfolgreich --> AufruferPruefung : Ergebnis(text, backend, produces) zurückgeben
+    AufruferPruefung --> DatenschutzPruefung : Aufrufer ruft darf_weitergegeben_werden(text, ist_text=True)
+
+    state DatenschutzPruefung {
+        [*] --> InhaltsScan : Inhalt bis 2-MiB-Prüfgrenze untersuchen
+        InhaltsScan --> RotGesperrt : PII, IBAN, Steuer-ID, SSH-Key oder Bearer-Token erkannt
+        InhaltsScan --> GelbEingeschraenkt : Kontaktdaten oder Prüfgrenze überschritten
+        InhaltsScan --> GruenFreigegeben : Unbedenklicher Dokumenteninhalt
+    }
+
+    RotGesperrt --> SperrEntscheid : INV-LOCAL-04 Fail-Closed Sperre
+    GelbEingeschraenkt --> WarnEntscheid : Standardmäßig gesperrt (außer erlaube_gelb=True)
+    GruenFreigegeben --> FreigabeEntscheid : Freigegeben für LLM-Kontext
+
+    SperrEntscheid --> [*] : Weitergabe abgewiesen (Funde maskiert)
+    WarnEntscheid --> [*] : Weitergabe zur manuellen Prüfung pausiert
+    FreigabeEntscheid --> [*] : Bereit für RAG-Ingestion oder Vektordatenbank
 ```
 
 ---
