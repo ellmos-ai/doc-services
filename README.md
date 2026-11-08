@@ -3,14 +3,16 @@
 # doc-services
 
 [![Version](https://img.shields.io/badge/version-0.1.1-blue.svg)](pyproject.toml)
-[![Verified: 2026-10-30](https://img.shields.io/badge/verified-2026--10--30-brightgreen.svg)](CHANGELOG.md)
+[![Verified: 2026-11-08](https://img.shields.io/badge/verified-2026--11--08-brightgreen.svg)](CHANGELOG.md)
 [![Attribution: NOTICE](https://img.shields.io/badge/Attribution-NOTICE-blue.svg)](NOTICE)
 [![CI](https://img.shields.io/badge/CI-passing-brightgreen.svg)](.github/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-passing%20%7C%20100%25-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-88%20passed%20%7C%20100%25-brightgreen.svg)](tests/)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](pyproject.toml)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](pyproject.toml)
+[![Type Checking: py.typed](https://img.shields.io/badge/typing-py.typed-blue.svg)](doc_services/py.typed)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![Privacy: 100% Zero-Egress](https://img.shields.io/badge/privacy-100%25%20Zero--Egress-success.svg)](SECURITY.md)
+[![Zero-Copyleft: AGPL--Free](https://img.shields.io/badge/Zero--Copyleft-AGPL--Free-success.svg)](tests/test_no_agpl.py)
 [![Security: RunAsInvoker](https://img.shields.io/badge/security-RunAsInvoker-blue.svg)](SECURITY.md)
 [![Security SLA](https://img.shields.io/badge/security-48h%20SLA%20%7C%205d%20triage-blue.svg)](SECURITY.md)
 [![Third-Party: Audited](https://img.shields.io/badge/third--party-audited%20%7C%20100%25%20permissive-green.svg)](THIRD_PARTY_LICENSES.md)
@@ -65,6 +67,12 @@ An AI agent or autonomous loop tasked with ingesting documents faces three decis
 - **Strict AGPL Isolation:** PDF rasterization and text extraction are handled exclusively via `pypdfium2` and `pypdf`. PyMuPDF (`fitz`, AGPL) is nowhere imported or distributed.
 - **Fail-Closed Privacy Gate:** Evaluates document *content* (IBANs, tax IDs, health records, SSH private keys, bearer tokens) rather than superficial file names.
 - **Empirical Preference Learning:** Dynamically balances theoretical capabilities (`profil.json`) with host reality (`config.json`), recording successes and proposing optimal rankings to human operators.
+
+### Interactive Pipeline Execution Preview
+
+<p align="center">
+  <img src="assets/terminal-workflow.svg" width="100%" alt="doc-services interactive terminal workflow preview">
+</p>
 
 ---
 
@@ -228,7 +236,53 @@ sequenceDiagram
     opt Human approves proposed changes
         Registry->>Storage: Persist updated preference counts
     end
+```
 
+### Extraction Fallback & Privacy Decision State Machine
+
+The following finite state machine illustrates the dynamic engine evaluation, merged-cell deduplication, fallback progression, and fail-closed privacy screening:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Intake : Document path or text received
+    Intake --> FormatDetection : format_von(path)
+    FormatDetection --> OutputFiltering : Format identified (.docx / .pdf / .xlsx / .pptx / image)
+    OutputFiltering --> CandidateSelection : Apply produces constraint (text vs markdown)
+    CandidateSelection --> TryEngine : Rank candidate engines by preference score
+
+    state TryEngine {
+        [*] --> AttemptExecution : Invoke backend engine
+        AttemptExecution --> DeduplicateMergedCells : Success (Word DOCX)
+        AttemptExecution --> StandardExtraction : Success (PDF / XLSX / Plain)
+        AttemptExecution --> RecordFailure : Engine exception or missing dependency
+        RecordFailure --> NextCandidate : Consult remaining candidates in chain
+        NextCandidate --> AttemptExecution : Fallback to next engine
+        NextCandidate --> EngineExhausted : No viable engines remain
+    }
+
+    EngineExhausted --> ExtractionFailed : Raise error with diagnostic remedies
+    ExtractionFailed --> [*]
+
+    DeduplicateMergedCells --> ExtractionSucceeded : INV-LOCAL-05 applied
+    StandardExtraction --> ExtractionSucceeded : Text / Markdown extracted
+
+    ExtractionSucceeded --> CallerReview : Return Ergebnis(text, backend, produces)
+    CallerReview --> PrivacyScreening : Caller invokes darf_weitergegeben_werden(text, ist_text=True)
+
+    state PrivacyScreening {
+        [*] --> ContentScan : Scan document content up to 2 MiB bound
+        ContentScan --> RedBlocked : PII, IBAN, Tax ID, SSH key, Bearer token detected
+        ContentScan --> YellowRestricted : Contact data or inspection bound exceeded
+        ContentScan --> GreenApproved : Clean unencumbered document content
+    }
+
+    RedBlocked --> BlockVerdict : INV-LOCAL-04 Fail-Closed Block
+    YellowRestricted --> WarnVerdict : Block by default (unless erlaube_gelb=True)
+    GreenApproved --> SafeVerdict : Approved for LLM context ingestion
+
+    BlockVerdict --> [*] : Dissemination rejected (findings masked)
+    WarnVerdict --> [*] : Dissemination paused for review
+    SafeVerdict --> [*] : Ready for downstream RAG or vector store
 ```
 
 ---
