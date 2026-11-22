@@ -4,7 +4,7 @@
 ## Metadata
 - Version: 0.1.1 (Frozen per T-20260920-167562623)
 - License: MIT
-- Last-checked: 2026-10-30
+- Last-checked: 2026-11-08
 - Status: Active development / Production ready
 - Repository: https://github.com/ellmos-ai/doc-services
 - Organization: https://github.com/ellmos-ai
@@ -43,6 +43,15 @@
 2. View 2: Backend Engine Selection, Extraction & OCR Subsystem (`extrahieren`, `pypdfium2`, `tc`-deduplication)
 3. View 3: Privacy Gate, Fail-Closed Classifier & Content Screening (`darf_weitergegeben_werden()`, RED/YELLOW/GRÜN)
 4. View 4: Learning Preferences, Metric Tracking & Evaluation (`umsortierung_vorschlagen()`, empirical counts)
+
+## Visual Architecture & Assets
+
+- `assets/banner.png` / `assets/banner.svg`: High-resolution vector ecosystem branding.
+- `assets/terminal-workflow.svg`: Interactive terminal extraction, cell deduplication and privacy screening pipeline preview.
+- Mermaid Diagrams:
+  - 5-Layer Architectural Topology (`flowchart TD`)
+  - End-to-End Extraction & Privacy Lifecycle (`sequenceDiagram` with autonumber)
+  - Engine Fallback & Privacy Decision State Machine (`stateDiagram-v2`)
 
 ## Key Invariants (INV-LOCAL-01 to INV-SLA-10)
 

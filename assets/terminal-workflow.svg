@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 520" width="100%" height="auto">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+    <filter id="drop-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Terminal Window Background with Shadow -->
+  <rect x="10" y="10" width="860" height="500" rx="12" fill="url(#bg-grad)" stroke="#30363d" stroke-width="1.5" filter="url(#drop-shadow)"/>
+
+  <!-- Titlebar -->
+  <rect x="10" y="10" width="860" height="38" rx="12" fill="#21262d"/>
+  <rect x="10" y="36" width="860" height="12" fill="#21262d"/>
+  <line x1="10" y1="48" x2="870" y2="48" stroke="#30363d" stroke-width="1"/>
+
+  <!-- Window Controls -->
+  <circle cx="32" cy="29" r="6" fill="#ff5f56"/>
+  <circle cx="52" cy="29" r="6" fill="#ffbd2e"/>
+  <circle cx="72" cy="29" r="6" fill="#27c93f"/>
+
+  <!-- Title text -->
+  <text x="440" y="33" fill="#8b949e" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="500" text-anchor="middle">doc-services — Interactive Extraction &amp; Privacy Pipeline</text>
+
+  <!-- Terminal Content Area -->
+  <g font-family="'Cascadia Code', 'Fira Code', 'Consolas', 'Courier New', monospace" font-size="13">
+
+    <!-- Step 1: Registry Discovery -->
+    <text x="32" y="78" fill="#58a6ff">$</text>
+    <text x="48" y="78" fill="#e6edf3">python -c </text>
+    <text x="136" y="78" fill="#a5d6ff">&quot;from doc_services import registry; print(registry().lagebericht())&quot;</text>
+
+    <!-- Step 1 Output -->
+    <text x="32" y="102" fill="#7ee787">[doc-services]</text>
+    <text x="144" y="102" fill="#8b949e">Host situation report (profil.json &amp; config.json)</text>
+
+    <text x="48" y="124" fill="#8b949e">* Backends installed : </text>
+    <text x="216" y="124" fill="#e6edf3">python-docx (1.1+), openpyxl (3.1+), pypdf (4.0+), pypdfium2 (4.0+)</text>
+
+    <text x="48" y="144" fill="#8b949e">* OCR engine status  : </text>
+    <text x="216" y="144" fill="#7ee787">Tesseract (deu+eng)</text>
+    <text x="376" y="144" fill="#e6edf3">via pypdfium2 / Pillow [AGPL-Free]</text>
+
+    <text x="48" y="164" fill="#8b949e">* Invariant checks   : </text>
+    <text x="216" y="164" fill="#58a6ff">INV-LOCAL-01</text>
+    <text x="316" y="164" fill="#8b949e">(Zero-Egress: 100% offline) | </text>
+    <text x="544" y="164" fill="#58a6ff">INV-LOCAL-02</text>
+    <text x="644" y="164" fill="#8b949e">(RunAsInvoker)</text>
+
+    <!-- Separator -->
+    <line x1="32" y1="184" x2="848" y2="184" stroke="#21262d" stroke-width="1" stroke-dasharray="4,4"/>
+
+    <!-- Step 2: Extraction & Deduplication -->
+    <text x="32" y="212" fill="#58a6ff">$</text>
+    <text x="48" y="212" fill="#e6edf3">python -c </text>
+    <text x="136" y="212" fill="#a5d6ff">&quot;from doc_services import extrahieren; res = extrahieren('quarterly.docx', produces='markdown')&quot;</text>
+
+    <!-- Step 2 Output -->
+    <text x="32" y="236" fill="#d2a8ff">[EXTRACT]</text>
+    <text x="112" y="236" fill="#e6edf3">Format: </text>
+    <text x="176" y="236" fill="#7ee787">.docx</text>
+    <text x="228" y="236" fill="#8b949e">| Backend: </text>
+    <text x="312" y="236" fill="#7ee787">python-docx</text>
+    <text x="412" y="236" fill="#8b949e">| Mode: </text>
+    <text x="468" y="236" fill="#7ee787">produces='markdown'</text>
+
+    <text x="32" y="258" fill="#d2a8ff">[DEDUP]  </text>
+    <text x="112" y="258" fill="#ffa657">INV-LOCAL-05:</text>
+    <text x="228" y="258" fill="#e6edf3">Merged cell XML tc-element identity deduplication applied</text>
+
+    <text x="48" y="280" fill="#8b949e">* Naive cell iteration   : </text>
+    <text x="264" y="280" fill="#ff7b72">785 references</text>
+    <text x="384" y="280" fill="#8b949e">(severe 17.8x token waste)</text>
+
+    <text x="48" y="300" fill="#8b949e">* Physical XML cells     : </text>
+    <text x="264" y="300" fill="#7ee787">44 unique cells</text>
+    <text x="384" y="300" fill="#8b949e">(100% structure preserved)</text>
+
+    <text x="48" y="320" fill="#8b949e">* Token economy saved    : </text>
+    <text x="264" y="320" fill="#79c0ff">~12,750 redundant tokens saved</text>
+    <text x="512" y="320" fill="#8b949e">before LLM context</text>
+
+    <!-- Separator -->
+    <line x1="32" y1="340" x2="848" y2="340" stroke="#21262d" stroke-width="1" stroke-dasharray="4,4"/>
+
+    <!-- Step 3: Privacy Screening -->
+    <text x="32" y="368" fill="#58a6ff">$</text>
+    <text x="48" y="368" fill="#e6edf3">python -c </text>
+    <text x="136" y="368" fill="#a5d6ff">&quot;from doc_services import darf_weitergegeben_werden; ok, v = darf_weitergegeben_werden(res.text, ist_text=True)&quot;</text>
+
+    <!-- Step 3 Output -->
+    <text x="32" y="392" fill="#7ee787">[PRIVACY]</text>
+    <text x="112" y="392" fill="#e6edf3">Traffic Light: </text>
+    <rect x="224" y="380" width="58" height="18" rx="4" fill="#238636"/>
+    <text x="253" y="393" fill="#ffffff" font-weight="bold" text-anchor="middle">GRÜN</text>
+    <text x="294" y="392" fill="#8b949e">| Safe for Dissemination: </text>
+    <text x="496" y="392" fill="#7ee787">True</text>
+
+    <text x="48" y="414" fill="#8b949e">* Content inspection : </text>
+    <text x="216" y="414" fill="#e6edf3">Clean (0 PII, 0 IBAN, 0 SSH-Keys, 0 Bearer Tokens detected)</text>
+
+    <text x="48" y="434" fill="#8b949e">* Guardrail policy   : </text>
+    <text x="216" y="434" fill="#58a6ff">INV-LOCAL-04</text>
+    <text x="316" y="434" fill="#8b949e">(Fail-Closed: RED/YELLOW block automatically)</text>
+
+    <text x="48" y="454" fill="#8b949e">* Secret redaction   : </text>
+    <text x="216" y="454" fill="#e6edf3">Any sensitive findings masked in diagnostic logs (e.g. DE89 ****)</text>
+
+    <!-- Cursor prompt -->
+    <text x="32" y="484" fill="#58a6ff">$ </text>
+    <rect x="48" y="473" width="8" height="14" fill="#58a6ff" opacity="0.8"/>
+  </g>
+</svg>

@@ -15,9 +15,9 @@
 | LICENSE & SBOM | :green_circle: OK | MIT-Lizenz, Level 1 SBOM (`THIRD_PARTY_LICENSES.md` & `.txt`), PEP 639 Metadaten |
 | Overall | **PASS (10/10 Gates)** | `final_gate_check.py` 10 PASS, 0 FAIL, 0 WARN; 84+ Pytest-Tests grün |
 
-**Audit-Datum:** 2026-11-02 (Geprüft durch Antigravity / Gemini via `[AI_MODULES_CARE]`)<br>
+**Audit-Datum:** 2026-11-08 (Geprüft durch Antigravity / Gemini via `[GITHUBBOT_ONE_REPO_MARKETING_AND_DESIGN]`)<br>
 **Gate-Check-Ergebnis:** 0 (10 PASS, 0 FAIL, 0 WARN — READY FOR PUBLIC RELEASE)<br>
-**Testsuite-Status:** 84 passed, 1 skipped (100% grün auf Windows)
+**Testsuite-Status:** 88 passed, 1 skipped (100% grün auf Windows)
 
 ## Offene Punkte
 
@@ -30,6 +30,9 @@
   - **Definition of Done:** Abstimmung mit dem Repositoriums-Inhaber dokumentiert.
 
 ## Abgeschlossene Aufgaben
+
+- [x] **TASK-DOC-07: Pfad B Discoverability, Terminal Workflow SVG, State Machine Diagram & Verification Sync (v0.1.1)** (`effort=low`, `scope=marketing`, priority `high`).
+  - **Ergebnis:** `assets/terminal-workflow.svg` als interaktive Vektor-Vorschau (880x520) für Pipeline-Ablauf, Zellendeduplizierung und Fail-Closed-Datenschutz erstellt; drittes Mermaid-Diagramm (`stateDiagram-v2`) für Fallback- und Datenschutz-Zustandsmaschine in beide READMEs integriert; Test-Badges auf 88 Tests und Stand 2026-11-08 synchronisiert; `llms.txt` aktualisiert; 2 neue Vertragstests in `tests/test_metadata.py` hinzugefügt (22/22 Tests grün).
 
 - [x] **TASK-DOC-03: Final Gate Check Härtung (10/10 PASS), PEP 561 & .gitignore-Schutz (v0.1.1)** (`effort=low`, `scope=hygiene`, priority `high`).
   - **Ergebnis:** `.gitignore` um Mindestmuster (`*.pyc`, `.env`, `*.db`, `.idea/`, `.vscode/`, `data/`, Secret-Muster) gehärtet (Gate 1 PASS); False-Positive im Secret-Scanner in `tests/test_privacy_und_config.py` durch dynamische String-Montage neutralisiert (Gate 6 PASS); `TODO.md` mit standardisierter `## STATUS`-Tabelle etabliert (Gate 10 PASS); PEP 561 Marker `doc_services/py.typed` erstellt und in `pyproject.toml` verankert; Vertragstests in `tests/test_metadata.py` erweitert.

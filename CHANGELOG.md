@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — 2026-11-08 (Pfad B — Discoverability, Terminal Workflow SVG, Mermaid State Machine & Verification Sync)
+- **Interactive Visual Pipeline Asset (`assets/terminal-workflow.svg`)**:
+  - Designed high-resolution dark-mode vector SVG asset (880x520) capturing host situation discovery, DOCX XML `tc` cell deduplication (17.8x token savings), and fail-closed privacy screening with secret masking.
+  - Embedded preview asset in Section 1 of both `README.md` and `README_de.md`.
+- **Mermaid Fallback & Privacy State Machine (`stateDiagram-v2`)**:
+  - Integrated third diagram in Section 3 of `README.md` and `README_de.md` visualizing the finite state machine transitions from intake, format auto-detection, `produces` filtering, dynamic preference fallback chain to fail-closed content privacy evaluation.
+  - Validated syntax with `lint_mermaid.py` (0 syntax issues across all ecosystem Markdown files).
+- **Badge & Verification Currency Sync**:
+  - Synchronized verified and test badges to `2026-11-08` and 88 passing tests across both English and German READMEs.
+  - Added Type Checking (`py.typed`) and Zero-Copyleft (`AGPL-Free`) status badges.
+- **LLM Context Index Expansion (`llms.txt`)**:
+  - Updated timestamp to `2026-11-08` and documented new visual vector assets and diagram topology.
+- **Automated Contract Tests**:
+  - Expanded `tests/test_metadata.py` with 2 new contract tests (`test_terminal_workflow_svg_asset_present`, `test_state_diagram_v2_syntax_and_parity`), raising test suite to 88 passing tests (100% green).
+
 ### Added — 2026-11-02 (Pfad A — Final Gate Check Hardening & PEP 561 Typing)
 - **Final Gate Check Hardening (10/10 PASS)**:
   - Hardened `.gitignore` with all standard gate exclusion patterns (`*.pyc`, `*.pyo`, `*.pyd`, `.env`, `.env.*`, `*.db`, `*.sqlite`, `.idea/`, `.vscode/`, `data/`, secrets and certificates).
